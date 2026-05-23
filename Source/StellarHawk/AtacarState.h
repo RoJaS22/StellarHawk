@@ -16,7 +16,4 @@ public:
     virtual void ActualizarState(ANaveEnemiga* Nave, float DeltaTime) override;
     virtual void SalirState(ANaveEnemiga* Nave) override;
 
-private:
-    // Temporizador interno del estado para controlar la cadencia de fuego
-    float TiempoDesdeUltimoDisparo;
 };

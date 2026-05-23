@@ -107,6 +107,27 @@ void ANaveEnemiga::BeginPlay()
 	CambiarState(PatrullarState);
 }
 
+void ANaveEnemiga::Atacar(float DeltaTime)
+{
+	TiempoDesdeUltimoDisparo += DeltaTime;
+
+	if (TiempoDesdeUltimoDisparo >= CadenciaDisparo && Proyectil)
+	{
+		TiempoDesdeUltimoDisparo -= CadenciaDisparo;
+
+		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 30.0f);
+		FRotator RotacionSpawn = GetActorRotation();
+
+		FActorSpawnParameters ParametrosSpawn;
+		ParametrosSpawn.Owner = this;
+		ParametrosSpawn.Instigator = GetInstigator();
+
+		ParametrosSpawn.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		GetWorld()->SpawnActor<AActor>(Proyectil, UbicacionSpawn, RotacionSpawn, ParametrosSpawn);
+	}
+}
+
 void ANaveEnemiga::CambiarState(UEnemigoState* NuevoState)
 {
 	if (ActualState)

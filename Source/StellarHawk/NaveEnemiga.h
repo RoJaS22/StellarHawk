@@ -48,12 +48,13 @@ public:
 
 	// Tiempo en segundos entre cada disparo
 	UPROPERTY()
-	float CadenciaDisparo = 1.0f;
+	float CadenciaDisparo = 0.5f;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	//void Disparar(float DeltaTime);
+
+	
 
 public:	
 	// Called every frame
@@ -61,7 +62,8 @@ public:
 
 	void CambiarState(UEnemigoState* NuevoState);
 
-	
+	void Atacar(float DeltaTime);
+
 	float TiempoDesdeUltimoDisparo;
 
 private:
