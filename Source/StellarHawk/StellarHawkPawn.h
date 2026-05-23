@@ -86,5 +86,24 @@ public:
 	void BeginPlay() override;
 
 	void AplicarPowerUp(TSubclassOf<UPowerUpsDecorator> ClasePowerUp);
+
+public:
+	// Función que será llamada por el temporizador
+	UFUNCTION()
+	void RemoverPowerUp(TSubclassOf<UPowerUpsDecorator> PowerUpARemover);
+
+public:
+	UPROPERTY()
+	class UStaticMeshComponent* MallaEscudo;
+
+	// Vida de la nave
+	UPROPERTY()
+	float Vida = 100.0f;
+
+	// Sobrescribimos la función nativa de Unreal para recibir daño
+	virtual float TakeDamage(float CantidadDanio, struct FDamageEvent const& EventoDanio, class AController* CausanteEvento, AActor* CausanteDanio) override;
+
+	// Función auxiliar para actualizar los gráficos
+	void ActualizarVisuales();
 };
 

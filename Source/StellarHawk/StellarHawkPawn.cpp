@@ -12,6 +12,7 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
+#include "EscudoPowerUp.h"
 
 const FName AStellarHawkPawn::MoveForwardBinding("MoveForward");
 const FName AStellarHawkPawn::MoveRightBinding("MoveRight");
@@ -50,6 +51,19 @@ AStellarHawkPawn::AStellarHawkPawn()
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
+
+	//Malla del escudo
+	MallaEscudo = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldVisualComp"));
+	MallaEscudo->SetupAttachment(RootComponent);
+	MallaEscudo->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	MallaEscudo->SetVisibility(false);
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+	if (SphereMesh.Succeeded())
+	{
+		MallaEscudo->SetStaticMesh(SphereMesh.Object);
+		MallaEscudo->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
+	}
 
 }
 
@@ -165,6 +179,68 @@ void AStellarHawkPawn::AplicarPowerUp(TSubclassOf<UPowerUpsDecorator> ClasePower
 
 		// 4. El escudo se convierte en la nueva "capa exterior"
 		StatsActuales = NuevoPowerUp;
+
+		FTimerHandle PowerUpTimer;
+		FTimerDelegate TimerDel;
+
+		// Vinculamos la función de limpieza pasándole la clase como parámetro
+		TimerDel.BindUFunction(this, FName("RemoverPowerUp"), ClasePowerUp);
+
+		// Activamos el temporizador para dentro de 10.0 segundos (false = no se repite)
+		GetWorld()->GetTimerManager().SetTimer(PowerUpTimer, TimerDel, 10.0f, false);
+	}
+	ActualizarVisuales();
+}
+
+void AStellarHawkPawn::RemoverPowerUp(TSubclassOf<UPowerUpsDecorator> PowerUpARemover)
+{
+	if (StatsActuales && PowerUpARemover)
+	{
+		// Llamamos a nuestra función recursiva. 
+		// Actualiza el puntero de CurrentStats en caso de que se haya eliminado la capa más externa.
+		StatsActuales = StatsActuales->RemoverStat(PowerUpARemover);
+	}
+	ActualizarVisuales();
+}
+
+float AStellarHawkPawn::TakeDamage(float CantidadDanio, FDamageEvent const& EventoDanio, AController* CausanteEvento, AActor* CausanteDanio)
+{
+	if (!StatsActuales) return 0.0f;
+
+	// 1. EL DECORADOR ACTÚA DE GUARDIÁN
+	if (StatsActuales->TieneEscudo())
+	{
+		// ¡El escudo absorbe todo el daño!
+		// Opcional: Aquí podrías reproducir un sonido de "Rebote láser"
+
+		// MECÁNICA CLÁSICA: El escudo se destruye al recibir 1 disparo
+		// Llamamos a nuestra función de limpieza para que busque el escudo en la cadena y lo quite
+		RemoverPowerUp(UEscudoPowerUp::StaticClass());
+
+		// Devolvemos 0 porque la salud real no sufrió daño
+		return 0.0f;
+	}
+
+	// 2. RECIBIMOS EL DAÑO NORMAL
+	Vida -= CantidadDanio;
+
+	// 3. COMPROBAR MUERTE
+	if (Vida <= 0.0f)
+	{
+		// Aquí iría tu lógica de muerte (Explosión, Game Over, etc.)
+		Destroy();
+	}
+
+	return CantidadDanio;
+}
+
+void AStellarHawkPawn::ActualizarVisuales()
+{
+	if (StatsActuales)
+	{
+		// El decorador devolverá true si hay un escudo en la cadena, o false si no lo hay.
+		// SetVisibility acepta directamente ese booleano. ¡Súper limpio!
+		MallaEscudo->SetVisibility(StatsActuales->TieneEscudo());
 	}
 }
 

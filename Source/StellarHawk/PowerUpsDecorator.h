@@ -30,5 +30,6 @@ public:
     
     virtual bool TieneEscudo() const override;
     
+    virtual UNaveDecorator* RemoverStat(UClass* StatARemover) override;
 	
 };
