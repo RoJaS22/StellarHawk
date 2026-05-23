@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "NaveBaseDecorator.h"
+#include "PowerUpsDecorator.h"
 #include "StellarHawkPawn.generated.h"
+
+class UNaveBaseDecorator;
 
 UCLASS(Blueprintable)
 class AStellarHawkPawn : public APawn
@@ -74,5 +78,13 @@ public:
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+public:
+	UPROPERTY()
+	UNaveDecorator* StatsActuales = nullptr;
+
+	void BeginPlay() override;
+
+	void AplicarPowerUp(TSubclassOf<UPowerUpsDecorator> ClasePowerUp);
 };
 

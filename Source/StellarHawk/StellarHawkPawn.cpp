@@ -50,6 +50,7 @@ AStellarHawkPawn::AStellarHawkPawn()
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
+
 }
 
 void AStellarHawkPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -73,7 +74,7 @@ void AStellarHawkPawn::Tick(float DeltaSeconds)
 	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 
 	// Calculate  movement
-	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
+	const FVector Movement = MoveDirection * StatsActuales->GetVelocidadMovimiento() * DeltaSeconds;
 
 	// If non-zero size, move this actor
 	if (Movement.SizeSquared() > 0.0f)
@@ -135,5 +136,35 @@ void AStellarHawkPawn::FireShot(FVector FireDirection)
 void AStellarHawkPawn::ShotTimerExpired()
 {
 	bCanFire = true;
+}
+
+void AStellarHawkPawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	
+	StatsActuales = NewObject<UNaveBaseDecorator>(this);
+}
+
+void AStellarHawkPawn::AplicarPowerUp(TSubclassOf<UPowerUpsDecorator> ClasePowerUp)
+{
+	if (ClasePowerUp && StatsActuales)
+	{
+		GEngine->AddOnScreenDebugMessage(
+			-1,             // Clave (-1 crea un nuevo mensaje en cada llamada)
+			5.f,            // Tiempo que durará en pantalla (segundos)
+			FColor::Yellow, // Color del texto
+			TEXT("PowerUp aplicado") // El texto a mostrar (usa siempre TEXT())
+		);
+
+		// 2. Creamos la nueva mejora (ej: Escudo)
+		UPowerUpsDecorator* NuevoPowerUp = NewObject<UPowerUpsDecorator>(this, ClasePowerUp);
+
+		// 3. El escudo envuelve a las estadísticas anteriores
+		NuevoPowerUp->InicializarDecorator(StatsActuales);
+
+		// 4. El escudo se convierte en la nueva "capa exterior"
+		StatsActuales = NuevoPowerUp;
+	}
 }
 

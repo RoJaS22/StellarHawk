@@ -3,3 +3,22 @@
 
 #include "PowerUpsDecorator.h"
 
+void UPowerUpsDecorator::InicializarDecorator(UNaveDecorator* Stats)
+{
+    StatsEnvueltas = Stats;
+}
+
+float UPowerUpsDecorator::GetVelocidadMovimiento() const
+{
+    return StatsEnvueltas ? StatsEnvueltas->GetVelocidadMovimiento() : 0.0f;
+}
+
+float UPowerUpsDecorator::GetCadenciaDisparo() const
+{
+    return StatsEnvueltas ? StatsEnvueltas->GetCadenciaDisparo() : 0.0f;
+}
+
+bool UPowerUpsDecorator::TieneEscudo() const
+{
+    return StatsEnvueltas ? StatsEnvueltas->TieneEscudo() : false;
+}

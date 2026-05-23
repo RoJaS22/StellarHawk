@@ -17,29 +17,18 @@ class STELLARHAWK_API UPowerUpsDecorator : public UNaveDecorator
 protected:
     // UPROPERTY protege a las mejoras apiladas de ser borradas por el Garbage Collector
     UPROPERTY()
-    UNaveDecorator* StatsEnvueltas;
+    UNaveDecorator* StatsEnvueltas = nullptr;
 
 public:
     // Función para envolver la estadística anterior
-    void InicializarDecorator(UNaveDecorator* Stats)
-    {
-        StatsEnvueltas = Stats;
-    }
-
+    void InicializarDecorator(UNaveDecorator* Stats);
+    
     // Por defecto, devolvemos lo que sea que diga la capa anterior
-    virtual float GetVelocidadMovimiento() const override
-    {
-        return StatsEnvueltas ? StatsEnvueltas->GetVelocidadMovimiento() : 0.0f;
-    }
+    virtual float GetVelocidadMovimiento() const override;
 
-    virtual float GetCadenciaDisparo() const override
-    {
-        return StatsEnvueltas ? StatsEnvueltas->GetCadenciaDisparo() : 0.0f;
-    }
-
-    virtual bool TieneEscudo() const override
-    {
-        return StatsEnvueltas ? StatsEnvueltas->TieneEscudo() : false;
-    }
+    virtual float GetCadenciaDisparo() const override;
+    
+    virtual bool TieneEscudo() const override;
+    
 	
 };
