@@ -28,8 +28,11 @@ ANaveEnemiga::ANaveEnemiga()
 		MallaNaveEnemiga->SetStaticMesh(MallaAsset.Object);
 	}
 
-
+	// Si no dispara comente esta línea, compile, descomente y vuelva a compilar
 	Proyectil = AStellarHawkProjectile::StaticClass();
+
+	// Stats Nave Enemiga
+	Vida = 100.0f;
 }
 
 bool ANaveEnemiga::VeAlJugador()
@@ -51,23 +54,19 @@ bool ANaveEnemiga::VeAlJugador()
 	FVector DireccionAlJugador = (UbicacionJugador - UbicacionInicial).GetSafeNormal();
 	float ProductoPunto = FVector::DotProduct(Adelante, DireccionAlJugador);
 
-	// Convertimos nuestros grados tolerados a radianes y luego calculamos su coseno
 	float Umbral = FMath::Cos(FMath::DegreesToRadians(GradosVision));
 
-	// Si el producto punto es menor que nuestro umbral, el jugador está fuera del cono
 	if (ProductoPunto < Umbral)	return false;
 
 	FHitResult ResultadoHit;
 	FCollisionQueryParams ParametrosRastro;
 	ParametrosRastro.AddIgnoredActor(this);
 
-	// Definimos exactamente con qué tipos de objetos queremos chocar
 	FCollisionObjectQueryParams ParametrosObjeto;
-	ParametrosObjeto.AddObjectTypesToQuery(ECC_Pawn);        // 1. Queremos chocar con el Jugador
-	ParametrosObjeto.AddObjectTypesToQuery(ECC_WorldStatic); // 2. Queremos chocar con Asteroides/Paredes
+	ParametrosObjeto.AddObjectTypesToQuery(ECC_Pawn);        
+	ParametrosObjeto.AddObjectTypesToQuery(ECC_WorldStatic); 
 	ParametrosObjeto.AddObjectTypesToQuery(ECC_WorldDynamic);
 
-	// 3. Disparar el Raycast usando el canal de visibilidad por defecto
 	bool bHit = GetWorld()->LineTraceSingleByObjectType(
 		ResultadoHit,
 		UbicacionInicial,
@@ -77,17 +76,19 @@ bool ANaveEnemiga::VeAlJugador()
 	);
 
 	// --- SECCIÓN DE DEPURACIÓN VISUAL (Opcional) ---
+	/*
+	// Te dice a que esta golpeando el rayo, si es el jugador o un asteroide
+	if (bHit && ResultadoHit.GetActor())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Golpeó a: %s"), *ResultadoHit.GetActor()->GetName()));
+	}
+	*/
 	// Pinta la línea de verde si ve al jugador, roja si choca con otra cosa (asteroide)
-	// Borra o comenta esto cuando el juego esté listo
 	FColor ColorLinea = (bHit && ResultadoHit.GetActor() == Jugador) ? FColor::Green : FColor::Blue;
 	DrawDebugLine(GetWorld(), UbicacionInicial, UbicacionJugador, ColorLinea, false, 0.1f, 0, 2.0f);
-	// ----------------------------------------------
 
-	// 4. Evaluar el impacto
 	if (bHit && ResultadoHit.GetActor() == Jugador) return true;
-		// Si el rayo chocó con algo, verificamos si ese actor es el jugador
 
-	// Si llegamos aquí, el rayo chocó con un asteroide o el jugador no estaba en el impacto
 	return false;
 }
 
@@ -134,39 +135,27 @@ void ANaveEnemiga::CambiarState(UEnemigoState* NuevoState)
 	{
 		ActualState->SalirState(this);
 	}
+
 	ActualState = NuevoState;
+
 	if (ActualState)
 	{
 		ActualState->EntrarState(this);
 	}
 }
-/*
-void ANaveEnemiga::Disparar(float DeltaTime)
+
+float ANaveEnemiga::TakeDamage(float CantidadDanio, FDamageEvent const& EventoDanio, AController* CausanteEvento, AActor* CausanteDanio)
 {
-	TiempoDesdeUltimoDisparo += DeltaTime;
+	Vida -= CantidadDanio;
 
-	if (true)
+	if (Vida <= 0.0f)
 	{
-		// Restamos la cadencia en lugar de volver a 0 para mantener la precisión matemática
-		TiempoDesdeUltimoDisparo -= CadenciaDisparo;
-
-		// Calculamos la ubicación (Idealmente, en el futuro deberías usar un "Socket" del modelo 3D)
-		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 100.0f); // Ajustado a 100 según tu comentario
-		FRotator RotacionSpawn = GetActorRotation();
-
-		// Configuramos los parámetros de instanciación
-		FActorSpawnParameters ParametrosSpawn;
-		ParametrosSpawn.Owner = this;      // El dueño es este enemigo
-		ParametrosSpawn.Instigator = GetInstigator(); // El instigador (quién causará el daño)
-
-		// Forzamos que el proyectil aparezca siempre, aunque esté tocando algo
-		ParametrosSpawn.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		// Spawneamos el proyectil pasándole los parámetros
-		GetWorld()->SpawnActor<AActor>(Proyectil, UbicacionSpawn, RotacionSpawn, ParametrosSpawn);
+		Destroy();
 	}
+
+	return CantidadDanio;
 }
-*/
+
 // Called every frame
 void ANaveEnemiga::Tick(float DeltaTime)
 {
@@ -176,6 +165,5 @@ void ANaveEnemiga::Tick(float DeltaTime)
 	{
 		ActualState->ActualizarState(this, DeltaTime);
 	}
-
 }
 

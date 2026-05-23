@@ -5,5 +5,5 @@
 
 float UVelocidadPowerUp::GetVelocidadMovimiento() const
 {
-    return Super::GetVelocidadMovimiento() * 1.5f; // Ajusta el valor según el incremento de velocidad deseado
+    return Super::GetVelocidadMovimiento() * 1.5f; 
 }

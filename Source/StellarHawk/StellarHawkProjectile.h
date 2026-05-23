@@ -33,5 +33,9 @@ public:
 	FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+public:
+	UPROPERTY()
+	float CantidadDanio = 20.0f;
 };
 

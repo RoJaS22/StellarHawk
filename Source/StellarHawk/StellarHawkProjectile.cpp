@@ -6,6 +6,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine/StaticMesh.h"
+#include "Kismet/GameplayStatics.h" 
+#include "GameFramework/DamageType.h"
 
 AStellarHawkProjectile::AStellarHawkProjectile() 
 {
@@ -35,11 +37,25 @@ AStellarHawkProjectile::AStellarHawkProjectile()
 
 void AStellarHawkProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	if (OtherActor && OtherActor != this && OtherActor != GetOwner())
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
-	}
+		UGameplayStatics::ApplyDamage(
+			OtherActor,
+			CantidadDanio,
+			GetInstigatorController(), 
+			this,
+			UDamageType::StaticClass()
+		);
 
-	Destroy();
+		// Only add impulse and destroy projectile if we hit a physics
+		if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+		{
+			OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
+		}
+
+		// Opcional: Spawnear una partícula de explosión o sonido de impacto
+		// UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticle, GetActorLocation());
+
+		Destroy();
+	}
 }

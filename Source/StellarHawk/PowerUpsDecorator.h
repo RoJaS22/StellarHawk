@@ -20,10 +20,9 @@ protected:
     UNaveDecorator* StatsEnvueltas = nullptr;
 
 public:
-    // Función para envolver la estadística anterior
+    // Funcion para envolver
     void InicializarDecorator(UNaveDecorator* Stats);
     
-    // Por defecto, devolvemos lo que sea que diga la capa anterior
     virtual float GetVelocidadMovimiento() const override;
 
     virtual float GetCadenciaDisparo() const override;

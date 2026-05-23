@@ -27,16 +27,13 @@ UNaveDecorator* UPowerUpsDecorator::RemoverStat(UClass* StatARemover)
 {
     if (this->GetClass() == StatARemover)
     {
-        // Me salto a mí mismo en la cadena devolviendo la capa de abajo
         return StatsEnvueltas;
     }
 
-    // 2. No soy yo. Le paso la orden a la capa de abajo (si existe)
     if (StatsEnvueltas)
     {
         StatsEnvueltas = StatsEnvueltas->RemoverStat(StatARemover);
     }
 
-    // 3. Sigo devolviéndome a mí mismo para mantener intacta esta parte de la cadena
     return this;
 }

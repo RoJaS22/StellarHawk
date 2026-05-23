@@ -46,7 +46,6 @@ public:
 	UPROPERTY()
 	TSubclassOf<AActor> Proyectil;
 
-	// Tiempo en segundos entre cada disparo
 	UPROPERTY()
 	float CadenciaDisparo = 0.5f;
 
@@ -54,20 +53,23 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void CambiarState(UEnemigoState* NuevoState);
 
-	void Atacar(float DeltaTime);
+	virtual void Atacar(float DeltaTime);
 
-	float TiempoDesdeUltimoDisparo;
+	float TiempoDesdeUltimoDisparo = 0.0f;
 
-private:
+protected:
 	UPROPERTY()
 	UEnemigoState* ActualState = nullptr;
 
+public:
+	virtual float TakeDamage(float CantidadDanio, struct FDamageEvent const& EventoDanio, class AController* CausanteEvento, AActor* CausanteDanio) override;
+
+	UPROPERTY()
+	float Vida = 100.0f;
 };
