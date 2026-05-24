@@ -6,9 +6,12 @@
 #include "GameFramework/Character.h"
 #include "NaveBaseDecorator.h"
 #include "PowerUpsDecorator.h"
+#include "Blueprint/UserWidget.h"
 #include "StellarHawkPawn.generated.h"
 
 class UNaveBaseDecorator;
+class UStaticMeshComponent;
+class UUserWidget;
 
 UCLASS(Blueprintable)
 class AStellarHawkPawn : public APawn
@@ -93,15 +96,26 @@ public:
 
 public:
 	UPROPERTY()
-	class UStaticMeshComponent* MallaEscudo;
+	UStaticMeshComponent* MallaEscudo;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	float Vida = 100.0f;
+
+	// Para calcular el porcentaje de la barra del HUD
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
+	float VidaMaxima = 100.0f;
 
 	float ContadorDanioRecibido = 0.0f;
 
 	virtual float TakeDamage(float CantidadDanio, struct FDamageEvent const& EventoDanio, class AController* CausanteEvento, AActor* CausanteDanio) override;
 
 	void ActualizarVisuales();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HUDWidget;
+
+	UPROPERTY()
+	UUserWidget* ActualHUDWidget;
 };
 

@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "EscudoPowerUp.h"
+#include "Blueprint/UserWidget.h"
 
 const FName AStellarHawkPawn::MoveForwardBinding("MoveForward");
 const FName AStellarHawkPawn::MoveRightBinding("MoveRight");
@@ -65,6 +66,14 @@ AStellarHawkPawn::AStellarHawkPawn()
 		MallaEscudo->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 	}
 
+	// Cargar HUD
+	// y añadir "_C" al final para buscar la clase generada.
+	static ConstructorHelpers::FClassFinder<UUserWidget> HUDWidgetObj(TEXT("WidgetBlueprint'/Game/HUD.HUD_C'"));
+
+	if (HUDWidgetObj.Succeeded())
+	{
+		HUDWidget = HUDWidgetObj.Class;
+	}
 }
 
 void AStellarHawkPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -156,8 +165,18 @@ void AStellarHawkPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
 	StatsActuales = NewObject<UNaveBaseDecorator>(this);
+
+	// HUD
+	if (HUDWidget)
+	{
+		ActualHUDWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidget);
+
+		if (ActualHUDWidget)
+		{
+			ActualHUDWidget->AddToViewport();
+		}
+	}
 }
 
 void AStellarHawkPawn::AplicarPowerUp(TSubclassOf<UPowerUpsDecorator> ClasePowerUp)
