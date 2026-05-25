@@ -14,6 +14,8 @@
 #include "Sound/SoundBase.h"
 #include "EscudoPowerUp.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/BoxComponent.h"
+
 
 const FName AStellarHawkPawn::MoveForwardBinding("MoveForward");
 const FName AStellarHawkPawn::MoveRightBinding("MoveRight");
@@ -22,13 +24,37 @@ const FName AStellarHawkPawn::FireRightBinding("FireRight");
 
 AStellarHawkPawn::AStellarHawkPawn()
 {	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
+	/*
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("StaticMesh'/Game/MallaNave/gemitest2_Cube.gemitest2_Cube'"));
 	// Create the mesh component
 	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	RootComponent = ShipMeshComponent;
 	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
-	
+	*/
+
+	UBoxComponent* CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+	CollisionBox->SetBoxExtent(FVector(10.0f, 10.0f, 10.0f)); // Ajusta el tamaño según tu nave
+	CollisionBox->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	RootComponent = CollisionBox;
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMeshAsset(TEXT("StaticMesh'/Game/MallaNave/gemitest2_Cube.gemitest2_Cube'"));
+
+	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
+	ShipMeshComponent->SetStaticMesh(ShipMeshAsset.Object);
+	ShipMeshComponent->SetupAttachment(RootComponent);
+	ShipMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	/*
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> ShipMesh(TEXT("SkeletalMesh'/Game/MallaNave/gemitest2.gemitest2'"));
+
+	MallaNave = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ShipMesh"));
+	RootComponent = MallaNave;
+	MallaNave->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	MallaNave->SetSkeletalMesh(ShipMesh.Object);
+	//MallaNave->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	*/
+
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
 	FireSound = FireAudio.Object;
@@ -37,8 +63,8 @@ AStellarHawkPawn::AStellarHawkPawn()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when ship does
-	CameraBoom->TargetArmLength = 1200.f;
-	CameraBoom->SetRelativeRotation(FRotator(-80.f, 0.f, 0.f));
+	CameraBoom->TargetArmLength = 800.f;
+	CameraBoom->SetRelativeRotation(FRotator(-20.f, 0.f, 0.f));
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
 	// Create a camera...
@@ -102,9 +128,12 @@ void AStellarHawkPawn::Tick(float DeltaSeconds)
 	// If non-zero size, move this actor
 	if (Movement.SizeSquared() > 0.0f)
 	{
+		const FRotator RotacionActual = GetActorRotation();
 		const FRotator NewRotation = Movement.Rotation();
+		const FRotator RotacionSuave = FMath::RInterpTo(RotacionActual, NewRotation, DeltaSeconds, 5.0f);
+		
 		FHitResult Hit(1.f);
-		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
+		RootComponent->MoveComponent(Movement, RotacionSuave, true, &Hit);
 		
 		if (Hit.IsValidBlockingHit())
 		{

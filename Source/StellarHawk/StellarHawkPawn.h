@@ -117,5 +117,6 @@ public:
 
 	UPROPERTY()
 	UUserWidget* ActualHUDWidget;
+
 };
 
