@@ -13,6 +13,9 @@ class AStellarHawkGameMode : public AGameModeBase
 
 public:
 	AStellarHawkGameMode();
+
+protected:
+	void BeginPlay() override;	
 };
 
 
