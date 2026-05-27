@@ -12,7 +12,7 @@ class STELLARHAWK_API UPatrullarState : public UEnemigoState
 	GENERATED_BODY()
 	
 public:
-	virtual void EntrarState(ANaveEnemiga* Nave) override;
-	virtual void ActualizarState(ANaveEnemiga* Nave, float DeltaTime) override;
-	virtual void SalirState(ANaveEnemiga* Nave) override;
+	virtual void EntrarState(AInterfaceEnemigo* Nave) override;
+	virtual void ActualizarState(AInterfaceEnemigo* Nave, float DeltaTime) override;
+	virtual void SalirState(AInterfaceEnemigo* Nave) override;
 };

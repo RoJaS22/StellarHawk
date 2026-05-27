@@ -2,17 +2,17 @@
 
 
 #include "PatrullarState.h"
-#include "NaveEnemiga.h"
+#include "InterfaceEnemigo.h"
 #include "PerseguirState.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void UPatrullarState::EntrarState(ANaveEnemiga* Nave)
+void UPatrullarState::EntrarState(AInterfaceEnemigo* Nave)
 {
-    Nave->IndicePuntosRutaActual = 0;
+    //Nave->IndicePuntosRutaActual = 0;
 }
 
 
-void UPatrullarState::ActualizarState(ANaveEnemiga* Nave, float DeltaTime)
+void UPatrullarState::ActualizarState(AInterfaceEnemigo* Nave, float DeltaTime)
 {
     if (!Nave) return;
 
@@ -23,27 +23,9 @@ void UPatrullarState::ActualizarState(ANaveEnemiga* Nave, float DeltaTime)
         return;
 	}
 
-    if (Nave->PuntosRuta.Num() == 0) return;
-
-    FVector UbicacionActual = Nave->GetActorLocation();
-    FVector UbicacionObjetivo = Nave->PuntosRuta[Nave->IndicePuntosRutaActual];
-
-    float DistanciaObjetivo = FVector::Dist(UbicacionActual, UbicacionObjetivo);
-    if (DistanciaObjetivo <= Nave->Tolerancia)
-    {
-        Nave->IndicePuntosRutaActual = (Nave->IndicePuntosRutaActual + 1) % Nave->PuntosRuta.Num();
-        return; 
-    }
-
-    FVector Direccion = (UbicacionObjetivo - UbicacionActual).GetSafeNormal();
-    FVector NuevaUbicacion = UbicacionActual + (Direccion * Nave->VelocidadMovimiento * DeltaTime);
-    Nave->SetActorLocation(NuevaUbicacion);
-
-    FRotator RotacionObjetivo = UKismetMathLibrary::MakeRotFromX(Direccion);
-    FRotator RotacionSuave = FMath::RInterpTo(Nave->GetActorRotation(), RotacionObjetivo, DeltaTime, Nave->VelocidadRotacion);
-    Nave->SetActorRotation(RotacionSuave);
+    Nave->Patrullar(DeltaTime);
 }
 
-void UPatrullarState::SalirState(ANaveEnemiga* Nave)
+void UPatrullarState::SalirState(AInterfaceEnemigo* Nave)
 {
 }

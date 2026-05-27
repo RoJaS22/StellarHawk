@@ -3,15 +3,15 @@
 
 #include "PerseguirState.h"
 #include "PatrullarState.h"
-#include "NaveEnemiga.h"
+#include "InterfaceEnemigo.h"
 #include "AtacarState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/Engine.h"
 
-void UPerseguirState::EntrarState(ANaveEnemiga* Nave)
+void UPerseguirState::EntrarState(AInterfaceEnemigo* Nave)
 {
-	Nave->VelocidadMovimiento *= 1.5f;
+	//Nave->VelocidadMovimiento *= 1.5f;
     GEngine->AddOnScreenDebugMessage(
         -1,             // Clave (-1 crea un nuevo mensaje en cada llamada)
         5.f,            // Tiempo que durará en pantalla (segundos)
@@ -20,7 +20,7 @@ void UPerseguirState::EntrarState(ANaveEnemiga* Nave)
     );
 }
 
-void UPerseguirState::ActualizarState(ANaveEnemiga* Nave, float DeltaTime)
+void UPerseguirState::ActualizarState(AInterfaceEnemigo* Nave, float DeltaTime)
 {
     if (!Nave) return;
 
@@ -29,7 +29,7 @@ void UPerseguirState::ActualizarState(ANaveEnemiga* Nave, float DeltaTime)
         Nave->CambiarState(NewObject<UPatrullarState>(Nave));
         return;
     }
-
+    
     APawn* Jugador = UGameplayStatics::GetPlayerPawn(Nave->GetWorld(), 0);
     if (!Jugador) return;
 
@@ -50,12 +50,10 @@ void UPerseguirState::ActualizarState(ANaveEnemiga* Nave, float DeltaTime)
         Nave->SetActorLocation(NuevaUbicacion);
     }
 
-    FRotator RotacionObjetivo = UKismetMathLibrary::MakeRotFromX(Direccion);
-    FRotator RotacionSuave = FMath::RInterpTo(Nave->GetActorRotation(), RotacionObjetivo, DeltaTime, Nave->VelocidadRotacion * 1.5f);
-    Nave->SetActorRotation(RotacionSuave);
+	Nave->MirarHacia(UbicacionJugador, DeltaTime);
 }
 
-void UPerseguirState::SalirState(ANaveEnemiga* Nave)
+void UPerseguirState::SalirState(AInterfaceEnemigo* Nave)
 {
-    Nave->VelocidadMovimiento /= 1.5f;
+    //Nave->VelocidadMovimiento /= 1.5f;
 }

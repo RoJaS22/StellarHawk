@@ -4,20 +4,20 @@
 #include "AtacarState.h"
 #include "PerseguirState.h"
 #include "PatrullarState.h"
-#include "NaveEnemiga.h"
+#include "InterfaceEnemigo.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/Engine.h"
 
-void UAtacarState::EntrarState(ANaveEnemiga* Nave)
+void UAtacarState::EntrarState(AInterfaceEnemigo* Nave)
 {
     // Al entrar al estado de ataque, forzamos que pueda disparar casi de inmediato
     // asignándole un valor alto al temporizador.
-    Nave->TiempoDesdeUltimoDisparo= Nave->CadenciaDisparo;
+    //Nave->TiempoDesdeUltimoDisparo= Nave->CadenciaDisparo;
 
 }
 
-void UAtacarState::ActualizarState(ANaveEnemiga* Nave, float DeltaTime)
+void UAtacarState::ActualizarState(AInterfaceEnemigo* Nave, float DeltaTime)
 {
     if (!Nave) return;
 
@@ -40,14 +40,10 @@ void UAtacarState::ActualizarState(ANaveEnemiga* Nave, float DeltaTime)
         return;
     }
 
-    FVector Direccion = (UbicacionJugador - UbicacionActual).GetSafeNormal();
-    FRotator RotacionObjetivo = UKismetMathLibrary::MakeRotFromX(Direccion);
-    FRotator RotacionSuave = FMath::RInterpTo(Nave->GetActorRotation(), RotacionObjetivo, DeltaTime, Nave->VelocidadRotacion * 2.0f);
-    Nave->SetActorRotation(RotacionSuave);
-
+	Nave->MirarHacia(UbicacionJugador, DeltaTime);
     Nave->Atacar(DeltaTime);
 }
 
-void UAtacarState::SalirState(ANaveEnemiga* Nave)
+void UAtacarState::SalirState(AInterfaceEnemigo* Nave)
 {
 }
