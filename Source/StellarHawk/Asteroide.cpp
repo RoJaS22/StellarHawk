@@ -35,7 +35,7 @@ void AAsteroide::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Mover(DeltaTime);
+	//Mover(DeltaTime);
 }
 
 void AAsteroide::Mover(float DeltaTime)

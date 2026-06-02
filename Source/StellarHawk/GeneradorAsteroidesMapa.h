@@ -8,6 +8,7 @@
 
 class UBoxComponent;
 class UHierarchicalInstancedStaticMeshComponent;
+class AAsteroide;
 
 UCLASS()
 class STELLARHAWK_API AGeneradorAsteroidesMapa : public AActor
@@ -42,6 +43,11 @@ protected:
     /** Escala máxima para la aleatoriedad */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Asteroid Setup")
     float MaxEscala;
+
+    UPROPERTY(EditAnywhere, Category = "Asteroid Setup")
+    TSubclassOf<AActor> ClaseAsteroide;
+    UPROPERTY()
+    TArray<AAsteroide*> AsteroidesSpawneados;
 
 public:	
 	// Called every frame

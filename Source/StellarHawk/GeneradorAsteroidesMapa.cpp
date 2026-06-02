@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Asteroide.h"
 
 // Sets default values
 AGeneradorAsteroidesMapa::AGeneradorAsteroidesMapa()
@@ -27,6 +28,8 @@ AGeneradorAsteroidesMapa::AGeneradorAsteroidesMapa()
     MinEscala = 0.4f;
     MaxEscala = 2.5f;
 
+	ClaseAsteroide = AAsteroide::StaticClass();
+
 }
 
 // Called when the game starts or when spawned
@@ -39,40 +42,37 @@ void AGeneradorAsteroidesMapa::BeginPlay()
 
 void AGeneradorAsteroidesMapa::GenerarMapa()
 {
-    if (!AsteroideHISM || !SpawnVolumen) return;
+    if (!ClaseAsteroide) return;
 
-    // Validación crítica: Si el HISM no tiene un mesh asignado, crasheará o no hará nada
-    if (!AsteroideHISM->GetStaticMesh())
-    {
-        UE_LOG(LogTemp, Warning, TEXT("AAsteroidFieldZone [%s]: No has asignado un Static Mesh al componente HISM."), *GetName());
-        return;
-    }
+    GEngine->AddOnScreenDebugMessage(
+        -1,             // Clave (-1 crea un nuevo mensaje en cada llamada)
+        5.f,            // Tiempo que durará en pantalla (segundos)
+        FColor::Yellow, // Color del texto
+        TEXT("GeneradorAsteroidesMapa Sirve") // El texto a mostrar (usa siempre TEXT())
+    );
 
-    FVector BoxExtent = SpawnVolumen->GetScaledBoxExtent();
-    FVector BoxOrigin = SpawnVolumen->GetComponentLocation();
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.Owner = this;
+    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
     for (int32 i = 0; i < CantidadAsteroides; ++i)
     {
-        // 1. Obtener un punto completamente aleatorio dentro de la caja de colisión
-        FVector UbicacionAleatoria = FMath::VRand() * 10000.0f;
+        float X = FMath::RandRange(-10000.0f, 10000.0f);
+        float Y = FMath::RandRange(-10000.0f, 10000.0f);
+        FVector UbicacionAleatoria(X, Y, 200.0f);
 
-        // 2. RESTRICCIÓN 2.5D: Forzamos que la posición en Y sea exactamente la del plano de juego (ej. 0.0)
-        UbicacionAleatoria.Z = 0.0f;
+        FRotator RotacionAleatoria = FRotator(FMath::RandRange(0.f, 360.f), FMath::RandRange(0.f, 360.f), FMath::RandRange(0.f, 360.f));
+        float EscalaBruta = FMath::RandRange(MinEscala, MaxEscala);
+        FVector EscalaAleatoria = FVector(EscalaBruta);
 
-        // 3. Rotación tridimensional completamente aleatoria para que no se note la repetición del mismo mesh
-        FRotator RotacionAleatoria = FRotator(
-            FMath::RandRange(0.f, 360.f), // Pitch
-            FMath::RandRange(0.f, 360.f), // Yaw
-            FMath::RandRange(0.f, 360.f)  // Roll
-        );
+        // SPAWNEAR EL ACTOR REAL EN EL MUNDO
+        AAsteroide* NuevoAsteroide = GetWorld()->SpawnActor<AAsteroide>(ClaseAsteroide, UbicacionAleatoria, RotacionAleatoria, SpawnParams);
 
-        // 4. Escala uniforme aleatoria para mantener las proporciones del asteroide
-        float RawScale = FMath::RandRange(MinEscala, MaxEscala);
-        FVector RandomScale = FVector(RawScale);
-
-        // 5. Construir la transformación final e instanciar
-        FTransform TransformacionInstancia(RotacionAleatoria, UbicacionAleatoria, RandomScale);
-        AsteroideHISM->AddInstance(TransformacionInstancia);
+        if (NuevoAsteroide)
+        {
+            NuevoAsteroide->SetActorScale3D(EscalaAleatoria);
+            AsteroidesSpawneados.Add(NuevoAsteroide);
+        }
     }
 }
 
