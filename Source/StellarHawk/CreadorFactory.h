@@ -19,6 +19,6 @@ public:
     UFUNCTION()
     AInterfaceEnemigo* SpawnearEnemigo(UWorld* Mundo, FTransform SpawnTransformacion, int32 NivelEnemigo);
 
-protected:
+public:
     virtual AInterfaceEnemigo* CrearEnemigo(UWorld* Mundo, FTransform SpawnTransformacion) PURE_VIRTUAL(UCreadorFactory::CrearEnemigo, return nullptr;);
 };

@@ -17,7 +17,7 @@ class STELLARHAWK_API UEnemigoBaseFactory : public UCreadorFactory
 public:
 	UEnemigoBaseFactory();
 
-protected:
+public:
 	virtual AInterfaceEnemigo* CrearEnemigo(UWorld* Mundo, FTransform SpawnTransformacion) override;
 
 private:
