@@ -4,10 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "CreadorFactory.h"
 #include "NivelDataAsset.generated.h"
 
-class USoundBase;
-class UCreadorFactory;
+USTRUCT(BlueprintType)
+struct FEnemySpawnInfo
+{
+    GENERATED_BODY()
+
+    // Qué fábrica usaremos para este enemigo específico
+    UPROPERTY(EditAnywhere, Category = "Config de Spawn")
+    TSubclassOf<UCreadorFactory> ClaseDeFabrica;
+
+    UPROPERTY(EditAnywhere, Category = "Config de Spawn")
+    int32 Cantidad = 1;
+
+    UPROPERTY(EditAnywhere, Category = "Config de Spawn")
+    float DelayEntreSpawn = 0.5f;
+};
+
+//Estructura que agrupa todos los enemigos que se activarán al mismo tiempo
+USTRUCT(BlueprintType)
+struct FTriggerSpawnData
+{
+    GENERATED_BODY()
+
+    // Esto permite que un solo trigger genere, por ejemplo: 3 cazas Y 1 nave pesada a la vez.
+    UPROPERTY(EditAnywhere, Category = "Config de Spawn")
+    TArray<FEnemySpawnInfo> ListaDeEnemigos;
+};
+
 
 UCLASS()
 class STELLARHAWK_API UNivelDataAsset : public UDataAsset
@@ -15,33 +41,7 @@ class STELLARHAWK_API UNivelDataAsset : public UDataAsset
 	GENERATED_BODY()
 
 public:
-    // --- INFORMACIÓN GENERAL ---
+    UPROPERTY(EditAnywhere, Category = "Configuración del Nivel")
+    TMap<FName, FTriggerSpawnData> DatosDeOleadas;
 
-    UPROPERTY()
-    FString NombreNivel;
-
-
-    // --- SISTEMA DE GENERACIÓN (FACTORY METHOD) ---
-
-    /** * Diccionario que mapea un ID de texto con la clase Factory específica.
-     * Ejemplo -> Clave: "Basico" | Valor: BP_EnemigoBasicoFactory (o tu clase C++)
-     * El LevelManager instanciará solo las fábricas incluidas en esta lista.
-     */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawners")
-    TMap<FName, TSubclassOf<UCreadorFactory>> FactoryClases;
-
-
-    // --- ESTÉTICA Y AUDIO ---
-
-    /** Música de fondo para el nivel */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-    USoundBase* BackgroundMusic;
-
-    /*
-    // --- BALANCE Y JUGABILIDAD ---
-
-    //Multiplicador de dificultad global (afecta la vida o daño de los enemigos generados) 
-    UPROPERTY()
-    float DifficultyMultiplier = 1.0f;
-	*/
 };

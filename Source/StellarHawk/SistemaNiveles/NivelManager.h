@@ -19,29 +19,15 @@ public:
 	// Sets default values for this actor's properties
 	ANivelManager();
 
-	void ProcessWaveTrigger(const TArray<FEnemigoSpawnRequest>& EnemiesToSpawn, FVector TriggerLocation);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, Category = "Configuración del Nivel")
+	UNivelDataAsset* DatosDelNivel;
 
-private:
-    // --- REFERENCIAS A SISTEMAS ---
+	void ManejarActivacionTrigger(FName TriggerID, const TArray<FTransform>& PuntosDeSpawn);
 
-    /** Referencia instanciada de tu Factory Method en el mapa */
-    UPROPERTY()
-    UCreadorFactory* EnemigoFactory;
-private:
-    UPROPERTY()
-    UNivelDataAsset* LevelData;
-
-    UPROPERTY()
-    bool bIsBossLevel;
-
-    UPROPERTY()
-    TMap<FName, UCreadorFactory*> FactoriasInstanciadas;
 };

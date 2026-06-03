@@ -3,69 +3,69 @@
 
 #include "NivelEventTrigger.h"
 #include "Components/BoxComponent.h"
+#include "StellarHawkPawn.h"
 
 // Sets default values
 ANivelEventTrigger::ANivelEventTrigger()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-    bHaSidoActivado = false;
+    bYaActivado = false;
 
     // Configuración del volumen de colisión
-    TriggerVolumen = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerVolume"));
-    RootComponent = TriggerVolumen;
+    TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
+    RootComponent = TriggerBox;
 
-    // Configurar colisiones para que actúe como un Query Trigger (no físico)
-    TriggerVolumen->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-    TriggerVolumen->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    TriggerVolumen->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-    // IMPORTANTE: Asegúrate de que el canal coincida con el de tu tipo de Nave (ej: Pawn)
-    TriggerVolumen->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	//Configuraciones del TriggerBox
+    TriggerBox->SetBoxExtent(FVector(500.0f, 500.0f, 100.0f));
+    TriggerBox->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+    TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ANivelEventTrigger::OnOverlapBegin);
 }
 
-// Called when the game starts or when spawned
 void ANivelEventTrigger::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-    TriggerVolumen->OnComponentBeginOverlap.AddDynamic(this, &ANivelEventTrigger::OnVolumeOverlapBegin);
-}
+    int32 CantidadDePuntos = 3;
+    float Separacion = 800.0f;
 
-void ANivelEventTrigger::OnVolumeOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-    // Si ya se activó o no hay enemigos configurados, ignoramos
-    if (bHaSidoActivado || EnemigosSpawnear.Num() == 0) return;
+    // Calculamos el centro para que la formación quede centrada respecto al Trigger
+    float OffsetInicialY = -((CantidadDePuntos - 1) * Separacion) / 2.0f;
 
-    if (OtherActor && OtherActor != this)
+    for (int32 i = 0; i < CantidadDePuntos; i++)
     {
-        // TODO: Verifica aquí si el OtherActor es efectivamente la nave del jugador
-        // Ej: if (OtherActor->IsA(AMyPlayerShip::StaticClass()))
+        FVector UbicacionCalculada = GetActorLocation();
 
-        bHaSidoActivado = true; // Bloqueamos futuras ejecuciones
+        UbicacionCalculada.X += 2000.0f;
 
-        // Obtenemos el GameMode para delegar el Spawn
-        if (UWorld* World = GetWorld())
-        {
-            if (AGameModeBase* CurrentGameMode = World->GetAuthGameMode())
-            {
-                // Aquí haces el Cast a tu GameMode personalizado y le pasas la data:
-                // ATuGameMode* SpaceGM = Cast<ATuGameMode>(CurrentGameMode);
-                // if (SpaceGM) { SpaceGM->RequestWaveSpawn(EnemiesToSpawn, GetActorLocation()); }
+        UbicacionCalculada.Y += (OffsetInicialY + (i * Separacion));
 
-                UE_LOG(LogTemp, Log, TEXT("ANivelEventTrigger: Jugador detectado. Enviando oleada de %d enemigos al GameMode."), EnemigosSpawnear.Num());
-            }
-        }
-
-        // Opcional: Si el trigger no hace nada más, puedes destruirlo para liberar memoria
-        // Destroy();
+        FTransform NuevoTransform(FRotator::ZeroRotator, UbicacionCalculada);
+        TransformacionesDeSpawn.Add(NuevoTransform);
     }
 }
 
-// Called every frame
-void ANivelEventTrigger::Tick(float DeltaTime)
+void ANivelEventTrigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
+    if (bYaActivado || !OtherActor || OtherActor == this) return;
 
+    AStellarHawkPawn* Jugador = Cast<AStellarHawkPawn>(OtherActor);
+
+    if (Jugador)
+    {
+        bYaActivado = true;
+
+        OnTriggerActivated.Broadcast(TriggerID, TransformacionesDeSpawn);
+
+        TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+        GEngine->AddOnScreenDebugMessage(
+            -1,             // Clave (-1 crea un nuevo mensaje en cada llamada)
+            5.f,            // Tiempo que durará en pantalla (segundos)
+            FColor::Yellow, // Color del texto
+            TEXT("Eureka") // El texto a mostrar (usa siempre TEXT())
+        );
+    }
 }
+
 
