@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class UEnemigoState;
+class UEstrategiaEnemigo;
 
 UCLASS(Abstract)
 class STELLARHAWK_API AInterfaceEnemigo : public AActor
@@ -37,9 +38,6 @@ public:
 	UPROPERTY()
 	float Tolerancia = 10.0f;
 
-	UPROPERTY()
-	float Vida = 100.0f;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,6 +45,14 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void SetEstrategia(UEstrategiaEnemigo* NuevaEstrategia);
+
+	float GetVida() const;
+	float GetVidaMaxima() const;
+
+	void RecibirDanio(float Cantidad);
+	void Curar(float Cantidad);
 
 public:
 	virtual void Atacar(float DeltaTime) PURE_VIRTUAL(AInterfaceEnemigo::Atacar, );
@@ -60,5 +66,14 @@ public:
 protected:
 	UPROPERTY()
 	UEnemigoState* ActualState = nullptr;
+
+	UPROPERTY()
+		UEstrategiaEnemigo* Estrategia;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vida")
+		float Vida;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vida")
+		float VidaMaxima;
 
 };

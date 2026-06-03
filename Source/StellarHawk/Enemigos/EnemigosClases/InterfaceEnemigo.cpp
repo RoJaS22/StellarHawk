@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "../EstrategiaEnemigo.h"
 #include "EnemigoState.h"
 #include "PatrullarState.h"
 #include "StellarHawkPawn.h"
@@ -18,6 +19,10 @@ AInterfaceEnemigo::AInterfaceEnemigo()
 
 	MallaEnemigo = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MallaEnemigo"));
 	RootComponent = MallaEnemigo;
+
+	VidaMaxima = 100.0f;
+	Vida = VidaMaxima;
+	Estrategia = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -55,12 +60,7 @@ void AInterfaceEnemigo::CambiarState(UEnemigoState* NuevoState)
 
 float AInterfaceEnemigo::TakeDamage(float CantidadDanio, FDamageEvent const& EventoDanio, AController* CausanteEvento, AActor* CausanteDanio)
 {
-	Vida -= CantidadDanio;
-
-	if (Vida <= 0.0f)
-	{
-		Destroy();
-	}
+	RecibirDanio(CantidadDanio);
 
 	return CantidadDanio;
 }
@@ -129,5 +129,46 @@ void AInterfaceEnemigo::Tick(float DeltaTime)
 	if (ActualState)
 	{
 		ActualState->ActualizarState(this, DeltaTime);
+	}
+
+	if (Estrategia)
+	{
+		Estrategia->EjecutarEstrategia(this, DeltaTime);
+	}
+}
+
+void AInterfaceEnemigo::SetEstrategia(UEstrategiaEnemigo* NuevaEstrategia)
+{
+	Estrategia = NuevaEstrategia;
+}
+
+float AInterfaceEnemigo::GetVida() const
+{
+	return Vida;
+}
+
+float AInterfaceEnemigo::GetVidaMaxima() const
+{
+	return VidaMaxima;
+}
+
+void AInterfaceEnemigo::RecibirDanio(float Cantidad)
+{
+	Vida -= Cantidad;
+
+	if (Vida <= 0.0f)
+	{
+		Vida = 0.0f;
+		Destroy();
+	}
+}
+
+void AInterfaceEnemigo::Curar(float Cantidad)
+{
+	Vida += Cantidad;
+
+	if (Vida > VidaMaxima)
+	{
+		Vida = VidaMaxima;
 	}
 }
