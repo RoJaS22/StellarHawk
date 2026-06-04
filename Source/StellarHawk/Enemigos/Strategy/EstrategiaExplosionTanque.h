@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../EstrategiaEnemigo.h"
+#include "EstrategiaEnemigo.h"
 #include "EstrategiaExplosionTanque.generated.h"
 
 UCLASS()

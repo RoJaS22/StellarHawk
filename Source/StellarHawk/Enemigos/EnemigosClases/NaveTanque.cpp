@@ -2,7 +2,7 @@
 
 #include "NaveTanque.h"
 #include "Components/StaticMeshComponent.h"
-#include "../EstrategiaExplosionTanque.h"
+#include "EstrategiaExplosionTanque.h"
 #include "Engine/World.h"
 #include "StellarHawkProjectile.h"
 #include "UObject/ConstructorHelpers.h"

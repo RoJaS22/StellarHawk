@@ -18,10 +18,11 @@ public class StellarHawk : ModuleRules
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Enemigos/EnemigosClases"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Enemigos/Factory"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Enemigos/State"));
-		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Items"));
+        PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Items"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Items/PowerUps"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Jugador"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Jugador/Mejoras"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "SistemaNiveles"));
-	}
+        PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Enemigos/Strategy"));
+    }
 }

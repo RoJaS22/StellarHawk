@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "../EstrategiaExplosionTanque.h"
+#include "EstrategiaExplosionTanque.h"
 #include "InterfaceEnemigo.h"
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"

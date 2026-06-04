@@ -3,7 +3,7 @@
 
 #include "NaveEnemiga.h"
 #include "Components/StaticMeshComponent.h"
-#include "../EstrategiaAtaqueRapido.h"
+#include "EstrategiaAtaqueRapido.h"
 #include "Engine/World.h"
 #include "StellarHawkProjectile.h"
 

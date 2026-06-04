@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
-#include "../EstrategiaEnemigo.h"
+#include "EstrategiaEnemigo.h"
 #include "EnemigoState.h"
 #include "PatrullarState.h"
 #include "StellarHawkPawn.h"
