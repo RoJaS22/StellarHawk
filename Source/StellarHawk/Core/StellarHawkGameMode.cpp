@@ -13,6 +13,7 @@ AStellarHawkGameMode::AStellarHawkGameMode()
 
 void AStellarHawkGameMode::BeginPlay()
 {
+    /*
     // --- GENERAR UN SPAWNER DE CAZAS ---
     FVector PosicionCazas(1500.0f, 500.0f, 200.0f);
 
@@ -24,5 +25,6 @@ void AStellarHawkGameMode::BeginPlay()
         // ¡Aquí le asignamos el tipo de fábrica puramente en C++!
         SpawnerCazas->IniciarSpawner(UEnemigoBaseFactory::StaticClass());
     }
+    */
 }
 
