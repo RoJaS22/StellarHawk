@@ -20,7 +20,7 @@
 const FName AStellarHawkPawn::MoveForwardBinding("MoveForward");
 const FName AStellarHawkPawn::MoveRightBinding("MoveRight");
 const FName AStellarHawkPawn::FireForwardBinding("FireForward");
-const FName AStellarHawkPawn::FireRightBinding("FireRight");
+const FName AStellarHawkPawn::TurnBinding("Turn");
 
 AStellarHawkPawn::AStellarHawkPawn()
 {	
@@ -38,22 +38,12 @@ AStellarHawkPawn::AStellarHawkPawn()
 	CollisionBox->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	RootComponent = CollisionBox;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMeshAsset(TEXT("StaticMesh'/Game/MallaNave/gemitest2_Cube.gemitest2_Cube'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMeshAsset(TEXT("StaticMesh'/Game/MallaNave/MallaJugador/gemitest2_Cube.gemitest2_Cube'"));
 
 	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	ShipMeshComponent->SetStaticMesh(ShipMeshAsset.Object);
 	ShipMeshComponent->SetupAttachment(RootComponent);
 	ShipMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	/*
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> ShipMesh(TEXT("SkeletalMesh'/Game/MallaNave/gemitest2.gemitest2'"));
-
-	MallaNave = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ShipMesh"));
-	RootComponent = MallaNave;
-	MallaNave->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	MallaNave->SetSkeletalMesh(ShipMesh.Object);
-	//MallaNave->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	*/
 
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
@@ -62,10 +52,11 @@ AStellarHawkPawn::AStellarHawkPawn()
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when ship does
-	CameraBoom->TargetArmLength = 2000.f;
-	CameraBoom->SetRelativeRotation(FRotator(-40.f, 0.f, 0.f));
-	CameraBoom->SetRelativeLocation(FVector(500.f, 0.f, 0.f));
+	CameraBoom->bUsePawnControlRotation = false;
+	//CameraBoom->SetUsingAbsoluteRotation(false); // Don't want arm to rotate when ship does
+	CameraBoom->TargetArmLength = 2500.f;
+	CameraBoom->SetRelativeRotation(FRotator(-15.f, 0.f, 0.f));
+	CameraBoom->SetRelativeLocation(FVector(-500.f, 0.f, 500.f));
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
 	// Create a camera...
@@ -111,46 +102,56 @@ void AStellarHawkPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis(MoveForwardBinding);
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAxis(FireForwardBinding);
-	PlayerInputComponent->BindAxis(FireRightBinding);
+	PlayerInputComponent->BindAxis(TurnBinding);
 }
 
 void AStellarHawkPawn::Tick(float DeltaSeconds)
 {
-	// Find movement direction
+	const float MouseX = GetInputAxisValue(TEXT("Turn"));
+
+	if (MouseX != 0.0f) AddControllerYawInput(MouseX);
+
+	FRotator RotationControlador = FRotator::ZeroRotator;
+	if (GetController() != nullptr)
+	{
+		RotationControlador = GetController()->GetControlRotation();
+	}
+
+	FRotator NuevaRotacionPersonaje = FRotator(0.f, RotationControlador.Yaw, 0.f);
+
 	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
 	const float RightValue = GetInputAxisValue(MoveRightBinding);
 
-	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
-	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
+	const FVector InputLocal = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 
-	// Calculate  movement
+	const FVector MoveDirection = NuevaRotacionPersonaje.RotateVector(InputLocal);
+
 	const FVector Movement = MoveDirection * StatsActuales->GetVelocidadMovimiento() * DeltaSeconds;
 
-	// If non-zero size, move this actor
-	if (Movement.SizeSquared() > 0.0f)
+	
+	if (Movement.SizeSquared() > 0.0f || GetActorRotation() != NuevaRotacionPersonaje)
 	{
 		const FRotator RotacionActual = GetActorRotation();
-		const FRotator NewRotation = Movement.Rotation();
-		const FRotator RotacionSuave = FMath::RInterpTo(RotacionActual, NewRotation, DeltaSeconds, 5.0f);
-		
+		const FRotator RotacionSuave = FMath::RInterpTo(RotacionActual, NuevaRotacionPersonaje, DeltaSeconds, 15.0f);
+
 		FHitResult Hit(1.f);
 		RootComponent->MoveComponent(Movement, RotacionSuave, true, &Hit);
-		
+
 		if (Hit.IsValidBlockingHit())
 		{
 			const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
 			const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
-			RootComponent->MoveComponent(Deflection, NewRotation, true);
+			RootComponent->MoveComponent(Deflection, RotacionSuave, true);
 		}
 	}
-	
-	// Create fire direction vector
-	const float FireForwardValue = GetInputAxisValue(FireForwardBinding);
-	const float FireRightValue = GetInputAxisValue(FireRightBinding);
-	const FVector FireDirection = FVector(FireForwardValue, FireRightValue, 0.f);
 
-	// Try and fire a shot
-	FireShot(FireDirection);
+	const float FireForwardValue = GetInputAxisValue(FireForwardBinding);
+
+	if(FireForwardValue != 0.0f)
+	{
+		const FVector FireDirection = GetActorForwardVector();
+		FireShot(FireDirection);
+	}
 }
 
 void AStellarHawkPawn::FireShot(FVector FireDirection)

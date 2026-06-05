@@ -68,12 +68,12 @@ protected:
 	UEnemigoState* ActualState = nullptr;
 
 	UPROPERTY()
-		UEstrategiaEnemigo* Estrategia;
+	UEstrategiaEnemigo* Estrategia;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vida")
-		float Vida;
+	float Vida;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vida")
-		float VidaMaxima;
+	float VidaMaxima;
 
 };

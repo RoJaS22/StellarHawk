@@ -15,7 +15,7 @@ ANaveEnemiga::ANaveEnemiga()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MallaAsset(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Trim.Shape_Trim'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MallaAsset(TEXT("StaticMesh'/Game/MallaNave/MallaEnemigos/spaceship_extracted/source/SpaceShip.SpaceShip'"));
 
 	if(MallaAsset.Succeeded())
 	{
@@ -26,10 +26,10 @@ ANaveEnemiga::ANaveEnemiga()
 	Proyectil = AStellarHawkProjectile::StaticClass();
 
 
-	RadioDeteccion = 700.0f;
+	RadioDeteccion = 10000.0f;
 	GradosVision = 45.0f;
 
-	RangoAtaque = 500.0f;
+	RangoAtaque = 5000.0f;
 	VelocidadAtaque = 1.0f;
 
 	VelocidadMovimiento = 500.0f;
@@ -65,7 +65,7 @@ void ANaveEnemiga::Atacar(float DeltaTime)
 	{
 		TiempoDesdeUltimoDisparo -= VelocidadAtaque;
 
-		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 30.0f);
+		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 700.0f);
 		FRotator RotacionSpawn = GetActorRotation();
 
 		FActorSpawnParameters ParametrosSpawn;

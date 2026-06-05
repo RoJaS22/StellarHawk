@@ -11,7 +11,7 @@ ANaveTanque::ANaveTanque()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MallaAsset(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MallaAsset(TEXT("StaticMesh'/Game/MallaNave/MallaEnemigos/spaceship/source/SpaceShip.SpaceShip'"));
 
 	if (MallaAsset.Succeeded())
 	{
@@ -20,10 +20,10 @@ ANaveTanque::ANaveTanque()
 
 	Proyectil = AStellarHawkProjectile::StaticClass();
 
-	RadioDeteccion = 700.0f;
+	RadioDeteccion = 10000.0f;
 	GradosVision = 45.0f;
 
-	RangoAtaque = 500.0f;
+	RangoAtaque = 5000.0f;
 	VelocidadAtaque = 1.0f;
 
 	VelocidadMovimiento = 500.0f;
@@ -61,7 +61,7 @@ void ANaveTanque::Atacar(float DeltaTime)
 	{
 		TiempoDesdeUltimoDisparo -= VelocidadAtaque;
 
-		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 30.0f);
+		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 1600.0f);
 		FRotator RotacionSpawn = GetActorRotation();
 
 		FActorSpawnParameters ParametrosSpawn;

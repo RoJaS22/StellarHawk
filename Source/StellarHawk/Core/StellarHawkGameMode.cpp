@@ -4,6 +4,7 @@
 #include "StellarHawkPawn.h"
 #include "SpawnerEnemigos.h"
 #include "EnemigoBaseFactory.h"
+#include "NaveTanque.h"
 
 AStellarHawkGameMode::AStellarHawkGameMode()
 {
@@ -26,5 +27,8 @@ void AStellarHawkGameMode::BeginPlay()
         SpawnerCazas->IniciarSpawner(UEnemigoBaseFactory::StaticClass());
     }
     */
+
+	FVector Ubi(1500.0f, 500.0f, 200.0f);
+	AInterfaceEnemigo* Enemigo = GetWorld()->SpawnActor<AInterfaceEnemigo>(ANaveTanque::StaticClass(), Ubi, FRotator::ZeroRotator);
 }
 

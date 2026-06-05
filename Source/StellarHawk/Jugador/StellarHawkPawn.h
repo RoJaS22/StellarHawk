@@ -64,7 +64,7 @@ public:
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;
 	static const FName FireForwardBinding;
-	static const FName FireRightBinding;
+	static const FName TurnBinding;
 
 private:
 

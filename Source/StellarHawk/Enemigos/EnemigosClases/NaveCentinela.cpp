@@ -11,7 +11,7 @@ ANaveCentinela::ANaveCentinela()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MallaAsset(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cone.Shape_Cone'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MallaAsset(TEXT("StaticMesh'/Game/MallaNave/MallaEnemigos/spaceship-ezno_extracted/source/Spaceship_1_Ship_Body.Spaceship_1_Ship_Body'"));
 
 	if (MallaAsset.Succeeded())
 	{
@@ -20,10 +20,10 @@ ANaveCentinela::ANaveCentinela()
 
 	Proyectil = AStellarHawkProjectile::StaticClass();
 
-	RadioDeteccion = 700.0f;
+	RadioDeteccion = 10000.0f;
 	GradosVision = 45.0f;
 
-	RangoAtaque = 500.0f;
+	RangoAtaque = 5000.0f;
 	VelocidadAtaque = 1.0f;
 
 	VelocidadMovimiento = 500.0f;
@@ -59,7 +59,7 @@ void ANaveCentinela::Atacar(float DeltaTime)
 	{
 		TiempoDesdeUltimoDisparo -= VelocidadAtaque;
 
-		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 30.0f);
+		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 700.0f);
 		FRotator RotacionSpawn = GetActorRotation();
 
 		FActorSpawnParameters ParametrosSpawn;
