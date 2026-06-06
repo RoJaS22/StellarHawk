@@ -13,4 +13,6 @@ class STELLARHAWK_API AAsteroideDestructible : public AAsteroide
 
 public:
 	AAsteroideDestructible();
+
+	virtual void AlDestruirse() override;
 };

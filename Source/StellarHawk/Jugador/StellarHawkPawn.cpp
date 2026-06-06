@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "EscudoPowerUp.h"
+#include "GameManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/BoxComponent.h"
 
@@ -267,6 +268,13 @@ float AStellarHawkPawn::TakeDamage(float CantidadDanio, FDamageEvent const& Even
 
 	if (Vida <= 0.0f)
 	{
+		Vida = 0.0f;
+
+		if (AGameManager::GetInstancia())
+		{
+			AGameManager::GetInstancia()->GameOver();
+		}
+
 		Destroy();
 	}
 
