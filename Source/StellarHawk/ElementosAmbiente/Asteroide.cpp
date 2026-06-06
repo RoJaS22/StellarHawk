@@ -48,10 +48,19 @@ void AAsteroide::RecibirDanio(float Danio)
 {
 	Vida -= Danio;
 
-	if (Vida <= 0)
+	if (Vida <= 0.0f)
 	{
+		Vida = 0.0f;
+
+		AlDestruirse();
+
 		Destroy();
 	}
+}
+
+void AAsteroide::AlDestruirse()
+{
+	
 }
 
 float AAsteroide::TakeDamage(

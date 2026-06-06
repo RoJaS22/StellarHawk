@@ -41,6 +41,8 @@ public:
 
 	virtual void RecibirDanio(float Danio);
 
+	virtual void AlDestruirse();
+
 	virtual float TakeDamage(
 		float DamageAmount,
 		struct FDamageEvent const& DamageEvent,

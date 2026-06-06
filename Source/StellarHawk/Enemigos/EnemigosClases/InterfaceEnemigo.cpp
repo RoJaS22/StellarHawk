@@ -8,6 +8,7 @@
 #include "DrawDebugHelpers.h"
 #include "EstrategiaEnemigo.h"
 #include "EnemigoState.h"
+#include "GameManager.h"
 #include "PatrullarState.h"
 #include "StellarHawkPawn.h"
 
@@ -159,6 +160,12 @@ void AInterfaceEnemigo::RecibirDanio(float Cantidad)
 	if (Vida <= 0.0f)
 	{
 		Vida = 0.0f;
+
+		if (AGameManager::GetInstancia())
+		{
+			AGameManager::GetInstancia()->RegistrarEnemigoDestruido();
+		}
+
 		Destroy();
 	}
 }
