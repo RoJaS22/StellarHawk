@@ -17,9 +17,6 @@ class STELLARHAWK_API ANaveCentinela : public AInterfaceEnemigo
 public:
 	ANaveCentinela();
 
-	UPROPERTY()
-		TArray<FVector> PuntosRuta;
-
 	int32 IndicePuntosRutaActual = 0;
 
 	UPROPERTY()

@@ -13,7 +13,7 @@ AAsteroide::AAsteroide()
 	RootComponent = Malla;
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsteroide(
-		TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'")
+		TEXT("StaticMesh'/Game/MallaNave/Asteroid_2b_LOD.Asteroid_2b_LOD'")
 	);
 
 	if (MeshAsteroide.Succeeded())

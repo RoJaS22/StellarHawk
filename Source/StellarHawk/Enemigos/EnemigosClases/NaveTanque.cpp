@@ -26,11 +26,11 @@ ANaveTanque::ANaveTanque()
 	RangoAtaque = 5000.0f;
 	VelocidadAtaque = 1.0f;
 
-	VelocidadMovimiento = 500.0f;
+	VelocidadMovimiento = 800.0f;
 	VelocidadRotacion = 5.0f;
 	Tolerancia = 10.0f;
 
-	VidaMaxima = 200.0f;
+	VidaMaxima = 500.0f;
 	Vida = VidaMaxima;
 }
 
@@ -42,15 +42,6 @@ void ANaveTanque::BeginPlay()
 		NewObject<UEstrategiaExplosionTanque>(this);
 
 	SetEstrategia(EstrategiaTanque);
-
-	FVector Punto1 = GetActorLocation() + FVector(0, 0, 0);
-	FVector Punto2 = GetActorLocation() + FVector(1000, 0, 0);
-	FVector Punto3 = GetActorLocation() + FVector(1000, 1000, 0);
-
-	PuntosRuta.Add(Punto1);
-	PuntosRuta.Add(Punto2);
-	PuntosRuta.Add(Punto3);
-
 }
 
 void ANaveTanque::Atacar(float DeltaTime)

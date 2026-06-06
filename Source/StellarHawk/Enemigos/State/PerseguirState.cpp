@@ -11,7 +11,7 @@
 
 void UPerseguirState::EntrarState(AInterfaceEnemigo* Nave)
 {
-	//Nave->VelocidadMovimiento *= 1.5f;
+	Nave->VelocidadMovimiento *= 1.5f;
     GEngine->AddOnScreenDebugMessage(
         -1,             // Clave (-1 crea un nuevo mensaje en cada llamada)
         5.f,            // Tiempo que durará en pantalla (segundos)
@@ -55,5 +55,5 @@ void UPerseguirState::ActualizarState(AInterfaceEnemigo* Nave, float DeltaTime)
 
 void UPerseguirState::SalirState(AInterfaceEnemigo* Nave)
 {
-    //Nave->VelocidadMovimiento /= 1.5f;
+    Nave->VelocidadMovimiento /= 1.5f;
 }

@@ -20,13 +20,13 @@ ANaveCentinela::ANaveCentinela()
 
 	Proyectil = AStellarHawkProjectile::StaticClass();
 
-	RadioDeteccion = 10000.0f;
-	GradosVision = 45.0f;
+	RadioDeteccion = 15000.0f;
+	GradosVision = 75.0f;
 
-	RangoAtaque = 5000.0f;
+	RangoAtaque = 7000.0f;
 	VelocidadAtaque = 1.0f;
 
-	VelocidadMovimiento = 500.0f;
+	VelocidadMovimiento = 800.0f;
 	VelocidadRotacion = 5.0f;
 	Tolerancia = 10.0f;
 
@@ -41,14 +41,6 @@ void ANaveCentinela::BeginPlay()
 		NewObject<UEstrategiaAtaqueSuicida>(this);
 
 	SetEstrategia(EstrategiaSuicida);
-
-	FVector Punto1 = GetActorLocation() + FVector(0, 0, 0);
-	FVector Punto2 = GetActorLocation() + FVector(1000, 0, 0);
-	FVector Punto3 = GetActorLocation() + FVector(1000, 1000, 0);
-
-	PuntosRuta.Add(Punto1);
-	PuntosRuta.Add(Punto2);
-	PuntosRuta.Add(Punto3);
 }
 
 void ANaveCentinela::Atacar(float DeltaTime)

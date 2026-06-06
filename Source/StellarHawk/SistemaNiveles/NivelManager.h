@@ -9,6 +9,7 @@
 
 class UCreadorFactory;
 class UNivelDataAsset;
+class APortal;
 
 UCLASS()
 class STELLARHAWK_API ANivelManager : public AActor
@@ -30,4 +31,19 @@ public:
 
 	void ManejarActivacionTrigger(FName TriggerID, const TArray<FTransform>& PuntosDeSpawn);
 
+public:
+	UPROPERTY(EditAnywhere, Category = "Configuración del Nivel")
+	APortal* PortalDelNivel;
+
+protected:
+	// La función que se llamará automáticamente cuando un enemigo sea destruido
+	UFUNCTION()
+	void ManejarMuerteEnemigo(AActor* EnemigoDestruido);
+
+private:
+	int32 EnemigosActivos = 0;
+
+	int32 TriggersPendientes = 0;
+
+	void VerificarFinDeNivel();
 };

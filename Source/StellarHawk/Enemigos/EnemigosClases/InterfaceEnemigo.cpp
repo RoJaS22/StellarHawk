@@ -33,6 +33,8 @@ void AInterfaceEnemigo::BeginPlay()
 	
 	UPatrullarState* PatrullarState = NewObject<UPatrullarState>(this);
 	CambiarState(PatrullarState);
+
+	GenerarPuntosRuta();
 }
 
 void AInterfaceEnemigo::MirarHacia(FVector UbicacionObjetivo, float DeltaTime)
@@ -42,6 +44,17 @@ void AInterfaceEnemigo::MirarHacia(FVector UbicacionObjetivo, float DeltaTime)
 	FRotator RotacionSuave = FMath::RInterpTo(GetActorRotation(), RotacionObjetivo, DeltaTime, VelocidadRotacion * 2.0f);
 
 	SetActorRotation(RotacionSuave);
+}
+
+void AInterfaceEnemigo::GenerarPuntosRuta()
+{
+	for (int32 i = 0; i < 10; i++)
+	{
+		float X = FMath::RandRange(-10000.0f, 10000.0f);
+		float Y = FMath::RandRange(-10000.0f, 10000.0f);
+		FVector NuevoPuntoRuta(X, Y, 200);  // Mantiene altura
+		PuntosRuta.Add(NuevoPuntoRuta);
+	}
 }
 
 void AInterfaceEnemigo::CambiarState(UEnemigoState* NuevoState)

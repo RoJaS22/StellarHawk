@@ -27,12 +27,12 @@ ANaveEnemiga::ANaveEnemiga()
 
 
 	RadioDeteccion = 10000.0f;
-	GradosVision = 45.0f;
+	GradosVision = 60.0f;
 
 	RangoAtaque = 5000.0f;
 	VelocidadAtaque = 1.0f;
 
-	VelocidadMovimiento = 500.0f;
+	VelocidadMovimiento = 700.0f;
 	VelocidadRotacion = 5.0f;
 	Tolerancia = 10.0f;
 
@@ -49,12 +49,6 @@ void ANaveEnemiga::BeginPlay()
 
 	SetEstrategia(EstrategiaRapida);
 
-	FVector Punto1 = GetActorLocation() + FVector(0, 0, 0);
-	FVector Punto2 = GetActorLocation() + FVector(1000, 0, 0);
-	FVector Punto3 = GetActorLocation() + FVector(1000, 1000, 0);
-	PuntosRuta.Add(Punto1);
-	PuntosRuta.Add(Punto2);
-	PuntosRuta.Add(Punto3);
 }
 
 void ANaveEnemiga::Atacar(float DeltaTime)

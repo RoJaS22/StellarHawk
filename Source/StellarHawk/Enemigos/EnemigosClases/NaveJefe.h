@@ -16,9 +16,6 @@ class STELLARHAWK_API ANaveJefe : public AInterfaceEnemigo
 public:
 	ANaveJefe();
 
-	UPROPERTY()
-		TArray<FVector> PuntosRuta;
-
 	int32 IndicePuntosRutaActual = 0;
 
 	UPROPERTY()

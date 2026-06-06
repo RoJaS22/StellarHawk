@@ -41,14 +41,6 @@ void ANaveJefe::BeginPlay()
 		NewObject<UEstrategiaRegeneracionJefe>(this);
 
 	SetEstrategia(EstrategiaJefe);
-
-	FVector Punto1 = GetActorLocation() + FVector(0, 0, 0);
-	FVector Punto2 = GetActorLocation() + FVector(1000, 0, 0);
-	FVector Punto3 = GetActorLocation() + FVector(1000, 1000, 0);
-
-	PuntosRuta.Add(Punto1);
-	PuntosRuta.Add(Punto2);
-	PuntosRuta.Add(Punto3);
 }
 
 void ANaveJefe::Atacar(float DeltaTime)

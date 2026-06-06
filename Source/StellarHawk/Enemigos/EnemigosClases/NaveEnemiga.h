@@ -18,9 +18,6 @@ public:
 	// Sets default values for this actor's properties
 	ANaveEnemiga();
 
-    UPROPERTY()
-    TArray<FVector> PuntosRuta;
-
     int32 IndicePuntosRutaActual = 0;
 
 	UPROPERTY()

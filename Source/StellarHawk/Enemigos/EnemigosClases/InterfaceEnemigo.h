@@ -63,6 +63,11 @@ public:
 	virtual bool VeAlJugador();
 	virtual void MirarHacia(FVector UbicacionObjetivo, float DeltaTime);
 
+	virtual void GenerarPuntosRuta();
+
+	UPROPERTY()
+	TArray<FVector> PuntosRuta;
+
 protected:
 	UPROPERTY()
 	UEnemigoState* ActualState = nullptr;

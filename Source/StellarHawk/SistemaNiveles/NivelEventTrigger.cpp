@@ -26,8 +26,8 @@ void ANivelEventTrigger::BeginPlay()
 {
     Super::BeginPlay();
 
-    int32 CantidadDePuntos = 3;
-    float Separacion = 800.0f;
+    int32 CantidadDePuntos = 10;
+    float Separacion = 5000.0f;
 
     // Calculamos el centro para que la formación quede centrada respecto al Trigger
     float OffsetInicialY = -((CantidadDePuntos - 1) * Separacion) / 2.0f;
@@ -36,7 +36,7 @@ void ANivelEventTrigger::BeginPlay()
     {
         FVector UbicacionCalculada = GetActorLocation();
 
-        UbicacionCalculada.X += 2000.0f;
+        UbicacionCalculada.X += 20000.0f;
 
         UbicacionCalculada.Y += (OffsetInicialY + (i * Separacion));
 

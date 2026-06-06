@@ -7,12 +7,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "NivelDataAsset.h"
 #include "Math/UnrealMathUtility.h"
+#include "InterfaceEnemigo.h"
+#include "Portal.h"
 
 // Sets default values
 ANivelManager::ANivelManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -54,7 +56,10 @@ void ANivelManager::BeginPlay()
     }
 
     TArray<AActor*> TriggersEnElMundo;
+   
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ANivelEventTrigger::StaticClass(), TriggersEnElMundo);
+    
+    TriggersPendientes = TriggersEnElMundo.Num();
 
     for (AActor* ActorEncontrado : TriggersEnElMundo)
     {
@@ -68,6 +73,8 @@ void ANivelManager::BeginPlay()
 
 void ANivelManager::ManejarActivacionTrigger(FName TriggerID, const TArray<FTransform>& PuntosDeSpawn)
 {
+	TriggersPendientes--;
+
     if (DatosDelNivel && DatosDelNivel->DatosDeOleadas.Contains(TriggerID))
     {
         FTriggerSpawnData DatosDeLaZona = DatosDelNivel->DatosDeOleadas[TriggerID];
@@ -89,9 +96,40 @@ void ANivelManager::ManejarActivacionTrigger(FName TriggerID, const TArray<FTran
                         TransformacionFinal = PuntosDeSpawn[IndicePunto];
                     }
 
-                    Fabrica->SpawnearEnemigo(GetWorld(), TransformacionFinal, 1);
+                    AInterfaceEnemigo* NuevoEnemigo = Cast<AInterfaceEnemigo>(Fabrica->SpawnearEnemigo(GetWorld(), TransformacionFinal, 1));
+
+                    if (NuevoEnemigo)
+                    {
+                        // 1. Sumamos 1 al contador
+                        EnemigosActivos++;
+
+                        // 2. Nos suscribimos al momento de su muerte. 
+                        // Usamos AddDynamic porque OnDestroyed es un delegado dinámico nativo de Unreal.
+                        NuevoEnemigo->OnDestroyed.AddDynamic(this, &ANivelManager::ManejarMuerteEnemigo);
+                    }
                 }
             }
+        }
+    }
+}
+
+void ANivelManager::ManejarMuerteEnemigo(AActor* EnemigoDestruido)
+{
+    // Restamos el enemigo que acaba de morir
+    EnemigosActivos--;
+
+    // Comprobamos si ya ganamos
+    VerificarFinDeNivel();
+
+}
+
+void ANivelManager::VerificarFinDeNivel()
+{
+    if (EnemigosActivos <= 0 && TriggersPendientes <= 0)
+    {
+        if (PortalDelNivel)
+        {
+            PortalDelNivel->ActivarPortal();
         }
     }
 }
