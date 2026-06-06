@@ -6,6 +6,7 @@
 #include "CreadorFactory.h"
 #include "Kismet/GameplayStatics.h"
 #include "NivelDataAsset.h"
+#include "Math/UnrealMathUtility.h"
 
 // Sets default values
 ANivelManager::ANivelManager()
@@ -25,6 +26,31 @@ void ANivelManager::BeginPlay()
     {
         UE_LOG(LogTemp, Error, TEXT("NivelManager no tiene un Data Asset asignado."));
         return;
+    }
+
+    if (DatosDelNivel->DatosDeAsteroides.ClaseObstaculo)
+    {
+        const FConfiguracionEntorno& ConfigEntorno = DatosDelNivel->DatosDeAsteroides;
+
+        for (int32 i = 0; i < ConfigEntorno.Cantidad; i++)
+        {
+            float PosicionX = FMath::RandRange(ConfigEntorno.LimitesEjeX.X, ConfigEntorno.LimitesEjeX.Y);
+            float PosicionY = FMath::RandRange(ConfigEntorno.LimitesEjeY.X, ConfigEntorno.LimitesEjeY.Y);
+
+            FVector UbicacionAleatoria(PosicionX, PosicionY, 0.0f);
+            FRotator RotacionAleatoria(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+            AActor* NuevoAsteroide = GetWorld()->SpawnActor<AActor>(ConfigEntorno.ClaseObstaculo, UbicacionAleatoria, RotacionAleatoria, SpawnParams);
+
+            if (NuevoAsteroide)
+            {
+                float EscalaAleatoria = FMath::RandRange(ConfigEntorno.RangoDeEscala.X, ConfigEntorno.RangoDeEscala.Y);
+                NuevoAsteroide->SetActorScale3D(FVector(EscalaAleatoria));
+            }
+        }
     }
 
     TArray<AActor*> TriggersEnElMundo;

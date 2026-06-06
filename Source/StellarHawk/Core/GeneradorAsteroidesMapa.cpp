@@ -24,9 +24,9 @@ AGeneradorAsteroidesMapa::AGeneradorAsteroidesMapa()
     AsteroideHISM->SetupAttachment(RootComponent);
 
     // Valores iniciales por defecto (puedes cambiarlos en el editor por cada zona)
-    CantidadAsteroides = 400;
-    MinEscala = 0.4f;
-    MaxEscala = 2.5f;
+    CantidadAsteroides = 600;
+    MinEscala = 2.0f;
+    MaxEscala = 15.0f;
 
 	ClaseAsteroide = AAsteroide::StaticClass();
 
@@ -57,8 +57,8 @@ void AGeneradorAsteroidesMapa::GenerarMapa()
 
     for (int32 i = 0; i < CantidadAsteroides; ++i)
     {
-        float X = FMath::RandRange(-10000.0f, 10000.0f);
-        float Y = FMath::RandRange(-10000.0f, 10000.0f);
+        float X = FMath::RandRange(-90000.0f, 90000.0f);
+        float Y = FMath::RandRange(-90000.0f, 90000.0f);
         FVector UbicacionAleatoria(X, Y, 200.0f);
 
         FRotator RotacionAleatoria = FRotator(FMath::RandRange(0.f, 360.f), FMath::RandRange(0.f, 360.f), FMath::RandRange(0.f, 360.f));

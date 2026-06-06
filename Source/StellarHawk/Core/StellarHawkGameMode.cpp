@@ -29,6 +29,6 @@ void AStellarHawkGameMode::BeginPlay()
     */
 
 	FVector Ubi(1500.0f, 500.0f, 200.0f);
-	AInterfaceEnemigo* Enemigo = GetWorld()->SpawnActor<AInterfaceEnemigo>(ANaveTanque::StaticClass(), Ubi, FRotator::ZeroRotator);
+	//AInterfaceEnemigo* Enemigo = GetWorld()->SpawnActor<AInterfaceEnemigo>(ANaveTanque::StaticClass(), Ubi, FRotator::ZeroRotator);
 }
 
