@@ -118,5 +118,9 @@ public:
 	UPROPERTY()
 	UUserWidget* ActualHUDWidget;
 
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UUserWidget> ClaseMenuPausa;
+
+	void TogglePause();
 };
 

@@ -289,3 +289,32 @@ void AStellarHawkPawn::ActualizarVisuales()
 	}
 }
 
+void AStellarHawkPawn::TogglePause()
+{
+	// Si el juego ya está pausado, no abrimos otro menú encima
+	if (UGameplayStatics::IsGamePaused(GetWorld())) return;
+
+	if (ClaseMenuPausa)
+	{
+		// Creamos el widget
+		UUserWidget* MenuPausa = CreateWidget<UUserWidget>(GetWorld(), ClaseMenuPausa);
+
+		if (MenuPausa)
+		{
+			MenuPausa->AddToViewport();
+
+			// Pausamos el mundo físico y la lógica
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+
+			// Mostramos el ratón para que pueda clickear los botones
+			APlayerController* PC = Cast<APlayerController>(GetController());
+			if (PC)
+			{
+				PC->bShowMouseCursor = true;
+				// Forzamos a que el teclado/ratón solo afecte a la interfaz de usuario (UI)
+				PC->SetInputMode(FInputModeUIOnly());
+			}
+		}
+	}
+}
+

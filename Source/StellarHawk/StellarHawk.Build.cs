@@ -14,7 +14,8 @@ public class StellarHawk : ModuleRules
 		// Añade esto en el constructor de tu StellarHawk.Build.cs
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Combate"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Core"));
-		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "ElementosAmbiente"));
+        PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Core/Menu"));
+        PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "ElementosAmbiente"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Enemigos/EnemigosClases"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Enemigos/Factory"));
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Enemigos/State"));
