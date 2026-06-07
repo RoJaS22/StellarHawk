@@ -122,5 +122,13 @@ public:
 	TSubclassOf<UUserWidget> ClaseMenuPausa;
 
 	void TogglePause();
+
+public:
+	// Aquí asignarás el Blueprint de tu menú de Game Over desde el editor
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UUserWidget> ClaseMenuGameOver;
+
+	// Función que llamarás cuando la salud llegue a 0
+	void ManejarMuerte();
 };
 

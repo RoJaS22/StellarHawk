@@ -100,6 +100,13 @@ AStellarHawkPawn::AStellarHawkPawn()
 	{
 		ClaseMenuPausa = MenuPausa.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> MenuPerder(TEXT("WidgetBlueprint'/Game/WBP_GameOver.WBP_GameOver_C'"));
+
+	if (MenuPerder.Succeeded())
+	{
+		ClaseMenuGameOver = MenuPerder.Class;
+	}
 }
 
 void AStellarHawkPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -280,12 +287,15 @@ float AStellarHawkPawn::TakeDamage(float CantidadDanio, FDamageEvent const& Even
 	{
 		Vida = 0.0f;
 
+		/*
 		if (AGameManager::GetInstancia())
 		{
 			AGameManager::GetInstancia()->GameOver();
 		}
+		*/
 
-		Destroy();
+		ManejarMuerte();
+		//Destroy();
 	}
 
 	return CantidadDanio;
@@ -344,6 +354,38 @@ void AStellarHawkPawn::TogglePause()
 				PC->bShowMouseCursor = true;
 				PC->SetInputMode(FInputModeUIOnly());
 			}
+		}
+	}
+}
+
+void AStellarHawkPawn::ManejarMuerte()
+{
+	SetActorHiddenInGame(true); // La hacemos invisible
+	SetActorEnableCollision(false); // Evitamos que los enemigos choquen con el fantasma
+	SetActorTickEnabled(false); // Apagamos su lógica interna
+
+
+	if (ClaseMenuGameOver)
+	{
+		UUserWidget* MenuGameOver = CreateWidget<UUserWidget>(GetWorld(), ClaseMenuGameOver);
+		
+		if (MenuGameOver)
+		{
+			MenuGameOver->AddToViewport();
+
+			// 4. Liberamos el ratón para que pueda clickear "Reintentar"
+			APlayerController* PC = Cast<APlayerController>(GetController());
+			if (PC)
+			{
+				PC->bShowMouseCursor = true;
+
+				// Forzamos el foco en la UI para que el jugador no siga disparando o rotando la cámara fantasma
+				FInputModeUIOnly InputModeData;
+				PC->SetInputMode(InputModeData);
+			}
+
+			// 5. Pausamos el mundo (opcional, si prefieres que la acción se detenga)
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
 		}
 	}
 }
