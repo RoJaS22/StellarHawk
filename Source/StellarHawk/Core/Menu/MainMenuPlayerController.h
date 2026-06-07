@@ -15,6 +15,9 @@ class STELLARHAWK_API AMainMenuPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
+    AMainMenuPlayerController();    
+
+public:
     // La clase del Widget de tu menú principal (tu WBP_MainMenu)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
     TSubclassOf<class UUserWidget> MainMenuWidgetClass;

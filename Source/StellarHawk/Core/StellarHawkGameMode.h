@@ -16,6 +16,11 @@ public:
 
 protected:
 	void BeginPlay() override;	
+
+protected:
+	// Función lógica que decide qué Pawn spawnear para el jugador
+	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
+
 };
 
 

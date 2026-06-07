@@ -41,6 +41,6 @@ void UPauseMenuWidget::OnMenuPrincipalClickeado()
     UGameplayStatics::SetGamePaused(GetWorld(), false);
 
     // Cambia "Map_MainMenu" por el nombre de tu mapa del menú inicial
-    UGameplayStatics::OpenLevel(this, FName("Map_MainMenu"));
+    UGameplayStatics::OpenLevel(this, FName("MapaMenu"));
 }
 

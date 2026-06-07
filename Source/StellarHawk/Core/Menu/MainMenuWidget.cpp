@@ -23,7 +23,7 @@ void UMainMenuWidget::NativeConstruct()
 
 void UMainMenuWidget::OnJugarClickeado()
 {
-    UGameplayStatics::OpenLevel(this, FName("Nivel_1"));
+    UGameplayStatics::OpenLevel(this, FName("Nivel_01"));
 }
 
 void UMainMenuWidget::OnSalirClickeado()

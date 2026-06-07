@@ -93,6 +93,13 @@ AStellarHawkPawn::AStellarHawkPawn()
 	{
 		HUDWidget = HUDWidgetObj.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> MenuPausa(TEXT("WidgetBlueprint'/Game/WBP_PauseMenu.WBP_PauseMenu_C'"));
+
+	if (MenuPausa.Succeeded())
+	{
+		ClaseMenuPausa = MenuPausa.Class;
+	}
 }
 
 void AStellarHawkPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -104,6 +111,9 @@ void AStellarHawkPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAxis(FireForwardBinding);
 	PlayerInputComponent->BindAxis(TurnBinding);
+
+	FInputActionBinding& PauseBinding = PlayerInputComponent->BindAction("PausarJuego", IE_Pressed, this, &AStellarHawkPawn::TogglePause);
+	PauseBinding.bExecuteWhenPaused = true;
 }
 
 void AStellarHawkPawn::Tick(float DeltaSeconds)
@@ -291,27 +301,47 @@ void AStellarHawkPawn::ActualizarVisuales()
 
 void AStellarHawkPawn::TogglePause()
 {
-	// Si el juego ya está pausado, no abrimos otro menú encima
-	if (UGameplayStatics::IsGamePaused(GetWorld())) return;
+	if (UGameplayStatics::IsGamePaused(GetWorld()))
+	{
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+
+		APlayerController* PC = Cast<APlayerController>(GetController());
+		if (PC)
+		{
+			PC->bShowMouseCursor = false;
+
+			FInputModeGameOnly InputModeData;
+			InputModeData.SetConsumeCaptureMouseDown(false);
+			PC->SetInputMode(InputModeData);
+
+			if (FSlateApplication::IsInitialized())
+			{
+				FSlateApplication::Get().SetAllUserFocusToGameViewport();
+			}
+			if (GEngine && GEngine->GameViewport)
+			{
+				GEngine->GameViewport->SetMouseLockMode(EMouseLockMode::LockAlways);
+				GEngine->GameViewport->SetMouseCaptureMode(EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown);
+			}
+		}
+
+		// NOTA: Tendrías que buscar el Widget del menú y llamar a RemoveFromParent() 
+		// para destruirlo, o dejar que la responsabilidad de reanudar sea SOLO del botón "Continuar".
+		return;
+	}
 
 	if (ClaseMenuPausa)
 	{
-		// Creamos el widget
 		UUserWidget* MenuPausa = CreateWidget<UUserWidget>(GetWorld(), ClaseMenuPausa);
-
 		if (MenuPausa)
 		{
 			MenuPausa->AddToViewport();
-
-			// Pausamos el mundo físico y la lógica
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
 
-			// Mostramos el ratón para que pueda clickear los botones
 			APlayerController* PC = Cast<APlayerController>(GetController());
 			if (PC)
 			{
 				PC->bShowMouseCursor = true;
-				// Forzamos a que el teclado/ratón solo afecte a la interfaz de usuario (UI)
 				PC->SetInputMode(FInputModeUIOnly());
 			}
 		}
