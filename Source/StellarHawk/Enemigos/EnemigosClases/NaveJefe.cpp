@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "StellarHawkProjectile.h"
 #include "UObject/ConstructorHelpers.h"
+#include "TimerManager.h"
 
 ANaveJefe::ANaveJefe()
 {
@@ -17,19 +18,19 @@ ANaveJefe::ANaveJefe()
 		MallaEnemigo->SetStaticMesh(MallaAsset.Object);
 	}
 
-	Proyectil = AStellarHawkProjectile::StaticClass();
+	ClaseProyectil = AStellarHawkProjectile::StaticClass();
 
-	RadioDeteccion = 700.0f;
-	GradosVision = 45.0f;
+	RadioDeteccion = 20000.0f;
+	GradosVision = 180.0f;
 
-	RangoAtaque = 500.0f;
+	RangoAtaque = 10000.0f;
 	VelocidadAtaque = 1.0f;
 
-	VelocidadMovimiento = 500.0f;
-	VelocidadRotacion = 5.0f;
+	VelocidadMovimiento = 1000.0f;
+	VelocidadRotacion = 15.0f;
 	Tolerancia = 10.0f;
 
-	VidaMaxima = 500.0f;
+	VidaMaxima = 1000.0f;
 	Vida = VidaMaxima;
 }
 
@@ -47,11 +48,11 @@ void ANaveJefe::Atacar(float DeltaTime)
 {
 	TiempoDesdeUltimoDisparo += DeltaTime;
 
-	if (TiempoDesdeUltimoDisparo >= VelocidadAtaque && Proyectil)
+	if (TiempoDesdeUltimoDisparo >= VelocidadAtaque && ClaseProyectil)
 	{
 		TiempoDesdeUltimoDisparo -= VelocidadAtaque;
 
-		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 30.0f);
+		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 5000.0f);
 		FRotator RotacionSpawn = GetActorRotation();
 
 		FActorSpawnParameters ParametrosSpawn;
@@ -60,7 +61,7 @@ void ANaveJefe::Atacar(float DeltaTime)
 
 		ParametrosSpawn.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		GetWorld()->SpawnActor<AActor>(Proyectil, UbicacionSpawn, RotacionSpawn, ParametrosSpawn);
+		GetWorld()->SpawnActor<AActor>(ClaseProyectil, UbicacionSpawn, RotacionSpawn, ParametrosSpawn);
 	}
 }
 

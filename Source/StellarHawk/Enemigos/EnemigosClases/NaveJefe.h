@@ -19,7 +19,7 @@ public:
 	int32 IndicePuntosRutaActual = 0;
 
 	UPROPERTY()
-		TSubclassOf<AActor> Proyectil;
+		TSubclassOf<AActor> ClaseProyectil;
 
 protected:
 	virtual void BeginPlay() override;
@@ -32,4 +32,5 @@ public:
 	virtual void Patrullar(float DeltaTime) override;
 
 	float TiempoDesdeUltimoDisparo = 0.0f;
+
 };

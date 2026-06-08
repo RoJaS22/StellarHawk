@@ -52,7 +52,7 @@ public:
 	float GetVida() const;
 	float GetVidaMaxima() const;
 
-	void RecibirDanio(float Cantidad);
+	virtual void RecibirDanio(float Cantidad);
 	void Curar(float Cantidad);
 
 public:
