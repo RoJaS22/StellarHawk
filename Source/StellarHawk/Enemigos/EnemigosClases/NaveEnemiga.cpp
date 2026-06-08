@@ -26,14 +26,14 @@ ANaveEnemiga::ANaveEnemiga()
 	Proyectil = AStellarHawkProjectile::StaticClass();
 
 
-	RadioDeteccion = 10000.0f;
-	GradosVision = 60.0f;
+	RadioDeteccion = 20000.0f;
+	GradosVision = 140.0f;
 
-	RangoAtaque = 5000.0f;
-	VelocidadAtaque = 1.0f;
+	RangoAtaque = 10000.0f;
+	VelocidadAtaque = 0.70f;
 
-	VelocidadMovimiento = 700.0f;
-	VelocidadRotacion = 5.0f;
+	VelocidadMovimiento = 1250.0f;
+	VelocidadRotacion = 10.0f;
 	Tolerancia = 10.0f;
 
 	Vida = 200.0f;

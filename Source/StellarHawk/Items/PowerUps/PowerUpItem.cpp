@@ -14,7 +14,7 @@ APowerUpItem::APowerUpItem()
 	PrimaryActorTick.bCanEverTick = true;
 
     Colision = CreateDefaultSubobject<USphereComponent>(TEXT("Esfera"));
-    Colision->InitSphereRadius(60.0f);
+    Colision->InitSphereRadius(500.0f);
 
     // Le decimos que genere eventos de superposición (Overlap)
     Colision->SetCollisionProfileName(TEXT("Superposicion"));

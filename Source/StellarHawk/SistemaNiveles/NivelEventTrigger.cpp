@@ -30,7 +30,7 @@ void ANivelEventTrigger::BeginPlay()
     float Separacion = 5000.0f;
 
     // Calculamos el centro para que la formación quede centrada respecto al Trigger
-    float OffsetInicialY = -((CantidadDePuntos - 1) * Separacion) / 2.0f;
+    //float OffsetInicialY = -((CantidadDePuntos - 1) * Separacion) / 2.0f;
 
     for (int32 i = 0; i < CantidadDePuntos; i++)
     {
@@ -38,7 +38,7 @@ void ANivelEventTrigger::BeginPlay()
 
         UbicacionCalculada.X += 20000.0f;
 
-        UbicacionCalculada.Y += (OffsetInicialY + (i * Separacion));
+        UbicacionCalculada.Y += (-10000.0f + (i * Separacion));
 
         FTransform NuevoTransform(FRotator::ZeroRotator, UbicacionCalculada);
         TransformacionesDeSpawn.Add(NuevoTransform);

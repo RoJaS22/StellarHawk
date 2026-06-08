@@ -9,6 +9,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "InterfaceEnemigo.h"
 #include "Portal.h"
+#include "GeneradorPowerUps.h"
 
 // Sets default values
 ANivelManager::ANivelManager()
@@ -23,6 +24,8 @@ ANivelManager::ANivelManager()
 void ANivelManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+    GetWorld()->SpawnActor<AGeneradorPowerUps>(AGeneradorPowerUps::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
 	
     if (!DatosDelNivel)
     {

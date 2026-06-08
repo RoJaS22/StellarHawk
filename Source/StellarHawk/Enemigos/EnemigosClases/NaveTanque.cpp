@@ -20,14 +20,14 @@ ANaveTanque::ANaveTanque()
 
 	Proyectil = AStellarHawkProjectile::StaticClass();
 
-	RadioDeteccion = 10000.0f;
-	GradosVision = 45.0f;
+	RadioDeteccion = 15000.0f;
+	GradosVision = 120.0f;
 
-	RangoAtaque = 5000.0f;
+	RangoAtaque = 7000.0f;
 	VelocidadAtaque = 1.0f;
 
-	VelocidadMovimiento = 800.0f;
-	VelocidadRotacion = 5.0f;
+	VelocidadMovimiento = 1000.0f;
+	VelocidadRotacion = 7.0f;
 	Tolerancia = 10.0f;
 
 	VidaMaxima = 500.0f;

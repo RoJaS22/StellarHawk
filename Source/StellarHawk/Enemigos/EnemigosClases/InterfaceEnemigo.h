@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PowerUpItem.h"
 #include "InterfaceEnemigo.generated.h"
 
 class UStaticMeshComponent;

@@ -20,17 +20,17 @@ ANaveCentinela::ANaveCentinela()
 
 	Proyectil = AStellarHawkProjectile::StaticClass();
 
-	RadioDeteccion = 15000.0f;
-	GradosVision = 75.0f;
+	RadioDeteccion = 25000.0f;
+	GradosVision = 180.0f;
 
-	RangoAtaque = 7000.0f;
-	VelocidadAtaque = 1.0f;
+	RangoAtaque = 17000.0f;
+	VelocidadAtaque = 0.40f;
 
-	VelocidadMovimiento = 800.0f;
-	VelocidadRotacion = 5.0f;
+	VelocidadMovimiento = 1400.0f;
+	VelocidadRotacion = 10.0f;
 	Tolerancia = 10.0f;
 
-	Vida = 200.0f;
+	Vida = 150.0f;
 }
 
 void ANaveCentinela::BeginPlay()

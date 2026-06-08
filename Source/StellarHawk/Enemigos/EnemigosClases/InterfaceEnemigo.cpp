@@ -12,6 +12,7 @@
 #include "PatrullarState.h"
 #include "StellarHawkPawn.h"
 
+
 // Sets default values
 AInterfaceEnemigo::AInterfaceEnemigo()
 {
@@ -50,8 +51,8 @@ void AInterfaceEnemigo::GenerarPuntosRuta()
 {
 	for (int32 i = 0; i < 10; i++)
 	{
-		float X = FMath::RandRange(-10000.0f, 10000.0f);
-		float Y = FMath::RandRange(-10000.0f, 10000.0f);
+		float X = FMath::RandRange(1000.0f, 20000.0f);
+		float Y = FMath::RandRange(1000.0f, 20000.0f);
 		FVector NuevoPuntoRuta(X, Y, 200);  // Mantiene altura
 		PuntosRuta.Add(NuevoPuntoRuta);
 	}
@@ -178,7 +179,7 @@ void AInterfaceEnemigo::RecibirDanio(float Cantidad)
 		{
 			AGameManager::GetInstancia()->RegistrarEnemigoDestruido();
 		}
-
+	
 		Destroy();
 	}
 }
