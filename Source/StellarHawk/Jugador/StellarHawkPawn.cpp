@@ -82,7 +82,7 @@ AStellarHawkPawn::AStellarHawkPawn()
 	if (SphereMesh.Succeeded())
 	{
 		MallaEscudo->SetStaticMesh(SphereMesh.Object);
-		MallaEscudo->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
+		MallaEscudo->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
 	}
 
 	// Cargar HUD

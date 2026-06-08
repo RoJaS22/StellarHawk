@@ -9,14 +9,24 @@
 
 ANaveJefeNivel6::ANaveJefeNivel6()
 {
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Game/MallaNave/MallaEnemigos/aquaris/source/aquaris_ship.aquaris_ship'"));
+
+    if (MeshAsset.Succeeded())
+    {
+        MallaEnemigo->SetStaticMesh(MeshAsset.Object);
+	}
+
 	VidaMaxima = 1500.0f;
 
-    //Fabrica = NewObject<UCreadorFactory>(this, UEnemigoBaseFactory::StaticClass());
+	DistanciaDisparar = 1000.0f;
+
 }
 
 void ANaveJefeNivel6::BeginPlay()
 {
     Super::BeginPlay();
+
+    Fabrica = NewObject<UCreadorFactory>(this, UEnemigoBaseFactory::StaticClass(), TEXT("NombreUnicoFabrica"));
 
     // Iniciamos el temporizador para que llame a la función cada un minuto (TiempoEntreInvocaciones)
     // El último parámetro 'true' hace que el temporizador sea un bucle infinito.
@@ -53,7 +63,7 @@ void ANaveJefeNivel6::SpawnearOleadaAliados()
 
         FVector PosicionSpawn = UbicacionBase + (GetActorRightVector() * DesfaseLateral);
 
-        PosicionSpawn -= (GetActorForwardVector() * 100.0f);
+        PosicionSpawn -= (GetActorForwardVector() * 3000.0f);
         
         TransformacionFinal = FTransform(RotacionBase, PosicionSpawn);
 

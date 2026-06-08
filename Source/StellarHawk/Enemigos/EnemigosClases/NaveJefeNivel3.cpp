@@ -13,6 +13,8 @@ ANaveJefeNivel3::ANaveJefeNivel3()
     bEstaHaciendoAtaqueEspecial = false;
     ProyectilesDisparadosActuales = 0; 
 
+	DistanciaDisparar = 5000.0f;
+
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MallaAsset(TEXT("StaticMesh'/Game/MallaNave/MallaEnemigos/luminaris-starship/source/9d06199c2def4d1b95bc7e37e8f30cf1_fbx.9d06199c2def4d1b95bc7e37e8f30cf1_fbx'"));
     
     if(MallaAsset.Succeeded())

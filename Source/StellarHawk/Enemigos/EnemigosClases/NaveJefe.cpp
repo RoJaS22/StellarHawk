@@ -52,7 +52,7 @@ void ANaveJefe::Atacar(float DeltaTime)
 	{
 		TiempoDesdeUltimoDisparo -= VelocidadAtaque;
 
-		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * 5000.0f);
+		FVector UbicacionSpawn = GetActorLocation() + (GetActorForwardVector() * DistanciaDisparar);
 		FRotator RotacionSpawn = GetActorRotation();
 
 		FActorSpawnParameters ParametrosSpawn;

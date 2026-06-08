@@ -31,7 +31,7 @@ protected:
     float TiempoEntreInvocaciones = 60.0f;
 
     UPROPERTY(EditAnywhere, Category = "Fábrica | Spawner")
-    int32 CantidadAliadosPorMinuto = 3;
+    int32 CantidadAliadosPorMinuto = 1;
 
     UPROPERTY(EditAnywhere, Category = "Fábrica | Spawner")
     float DistanciaSeparacionSpawn = 150.0f;

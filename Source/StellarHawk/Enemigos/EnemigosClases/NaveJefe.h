@@ -33,4 +33,6 @@ public:
 
 	float TiempoDesdeUltimoDisparo = 0.0f;
 
+	float DistanciaDisparar;
+
 };
